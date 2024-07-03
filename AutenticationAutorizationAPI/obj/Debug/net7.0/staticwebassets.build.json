@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "btQry70cpYwe0tuKp92QIzOcmd43ZPJxex42CtP00+A=",
+  "Source": "AutenticationAutorizationAPI",
+  "BasePath": "_content/AutenticationAutorizationAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

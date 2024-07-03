@@ -1,0 +1,14 @@
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerData\bin\Debug\net7.0\TaskManagerData.deps.json
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerData\bin\Debug\net7.0\TaskManagerData.runtimeconfig.json
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerData\bin\Debug\net7.0\TaskManagerData.dll
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerData\bin\Debug\net7.0\TaskManagerData.pdb
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerData\obj\Debug\net7.0\TaskManagerData.csproj.AssemblyReference.cache
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerData\obj\Debug\net7.0\TaskManagerData.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerData\obj\Debug\net7.0\TaskManagerData.AssemblyInfoInputs.cache
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerData\obj\Debug\net7.0\TaskManagerData.AssemblyInfo.cs
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerData\obj\Debug\net7.0\TaskManagerData.csproj.CoreCompileInputs.cache
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerData\obj\Debug\net7.0\TaskManagerData.dll
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerData\obj\Debug\net7.0\refint\TaskManagerData.dll
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerData\obj\Debug\net7.0\TaskManagerData.pdb
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerData\obj\Debug\net7.0\TaskManagerData.genruntimeconfig.cache
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerData\obj\Debug\net7.0\ref\TaskManagerData.dll
