@@ -14,14 +14,13 @@ namespace TaskManagerData.Configurations
             builder.Property(e => e.Email).IsRequired().HasMaxLength(100);
             builder.Property(e => e.PhoneNumber).IsRequired().HasMaxLength(10);
             builder.Property(e => e.PasswordHash).IsRequired();
+            builder.Property(e => e.UniqueCode).IsRequired().HasMaxLength(4);
             builder.Property(e => e.Role).IsRequired();
+            builder.Property(e => e.ProfilePictureUrl).HasMaxLength(250); 
 
             builder.HasIndex(e => e.Email).IsUnique();
-
-            builder.HasOne(e => e.Company)
-                .WithMany(c => c.Employees)
-                .HasForeignKey(e => e.CompanyID)
-                .OnDelete(DeleteBehavior.Restrict); 
+            builder.HasIndex(e => e.PhoneNumber).IsUnique();
+            builder.HasIndex(e => e.UniqueCode).IsUnique();
         }
     }
 }

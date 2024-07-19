@@ -12,7 +12,6 @@ namespace TaskManagerData.Contexts
         }
 
         public DbSet<Employee> Employees { get; set; }
-        public DbSet<Company> Companies { get; set; }
         public DbSet<ProjectTask> Tasks { get; set; }
         public DbSet<Comment> Comments { get; set; }
 
@@ -21,7 +20,6 @@ namespace TaskManagerData.Contexts
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
-            modelBuilder.ApplyConfiguration(new CompanyConfiguration());
             modelBuilder.ApplyConfiguration(new TaskConfiguration());
             modelBuilder.ApplyConfiguration(new CommentConfiguration());
         }

@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"] - TaskManager</title>
+    <link rel="stylesheet" type="text/css" href="~/css/stile.css" />
+    <script src="~/js/site.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/Account/Login">Login</a></li>
+                <li><a href="/Account/Register">Register</a></li>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li class="profile-menu">
+                        <a href="javascript:void(0);">@User.Identity.Name</a>
+                        <ul>
+                            <li><a href="/Account/Profile">Profile</a></li>
+                            <li><a href="/Account/Logout">Logout</a></li>
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </header>
+    <main>
+        @RenderBody()
+    </main>
+    <footer>
+        <p>&copy; 2024 - TaskManager</p>
+    </footer>
+</body>
+</html>

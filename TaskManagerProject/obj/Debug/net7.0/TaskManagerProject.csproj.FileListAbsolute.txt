@@ -77,3 +77,4 @@ C:\Users\radai\Documents\Projects\TaskManager\TaskManagerProject\bin\Debug\net7.
 C:\Users\radai\Documents\Projects\TaskManager\TaskManagerProject\bin\Debug\net7.0\TaskManagerData.dll
 C:\Users\radai\Documents\Projects\TaskManager\TaskManagerProject\bin\Debug\net7.0\TaskManagerData.pdb
 C:\Users\radai\Documents\Projects\TaskManager\TaskManagerProject\obj\Debug\net7.0\TaskManagerProject.csproj.CopyComplete
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerProject\bin\Debug\net7.0\Newtonsoft.Json.dll

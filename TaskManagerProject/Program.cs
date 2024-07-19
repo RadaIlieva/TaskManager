@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TaskManagerData.Contexts;
+using TaskManagerProject.DTOs;
+using TaskManagerProject.Services;
+using TaskManagerProject.Services.Interfaces;
 
 namespace TaskManagerProject
 {
@@ -10,11 +13,14 @@ namespace TaskManagerProject
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            // Add your DbContext
             builder.Services.AddDbContext<AppDbContext>(options =>
-                   options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddHttpClient<IAccountService, AccountService>();
+            builder.Services.Configure<ApiUrls>(builder.Configuration.GetSection("ApiUrls"));
 
             var app = builder.Build();
 
@@ -32,7 +38,7 @@ namespace TaskManagerProject
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Account}/{action=Login}/{id?}");
 
             app.Run();
         }

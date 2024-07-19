@@ -13,9 +13,10 @@ namespace TaskManagerData.Entities
         public string Email { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
+        public string UniqueCode { get; set; } = string.Empty;
         public UserRole Role { get; set; }
-        public int? CompanyID { get; set; }
-        public Company Company { get; set; } = null!;
+        public string ProfilePictureUrl { get; set; } = string.Empty; 
+
         public List<ProjectTask> ProjectTasks { get; set; } = new List<ProjectTask>();
         public List<Comment> Comments { get; set; } = new List<Comment>();
     }

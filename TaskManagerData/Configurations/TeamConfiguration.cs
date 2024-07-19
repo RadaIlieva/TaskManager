@@ -14,13 +14,7 @@ namespace TaskManagerData.Configurations
                 .IsRequired()
                 .HasMaxLength(100);
 
-            builder.Property(t => t.CompanyId)
-                .IsRequired();
-
-            builder.HasOne(t => t.Company)
-                .WithMany(c => c.Teams)
-                .HasForeignKey(t => t.CompanyId)
-                .OnDelete(DeleteBehavior.Cascade);
+           
 
             builder.HasOne(t => t.TeamLeader)
                 .WithMany()
