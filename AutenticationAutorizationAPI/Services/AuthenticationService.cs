@@ -13,7 +13,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TaskManagerData.Contexts;
 using TaskManagerData.Entities;
-using Org.BouncyCastle.Crypto.Generators;
 
 namespace AutenticationAutorizationAPI.Services
 {
@@ -35,15 +34,15 @@ namespace AutenticationAutorizationAPI.Services
                 throw new ArgumentException("Passwords do not match");
             }
 
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password); // Use BCrypt here
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
             string uniqueCode = await GenerateUniqueCode();
 
             var employee = new Employee
             {
-                FirstName = request.Name.Split(' ')[0],
-                LastName = request.Name.Split(' ').Length > 1 ? request.Name.Split(' ')[1] : string.Empty,
-                Email = IsValidEmail(request.EmailOrPhone) ? request.EmailOrPhone : null,
-                PhoneNumber = IsValidPhoneNumber(request.EmailOrPhone) ? request.EmailOrPhone : null,
+                FirstName = request.Username.Split(' ')[0],
+                LastName = request.Username.Split(' ').Length > 1 ? request.Username.Split(' ')[1] : string.Empty,
+                Email = IsValidEmail(request.Email) ? request.Email : null,
+                PhoneNumber = IsValidPhoneNumber(request.Email) ? request.Email : null,
                 PasswordHash = passwordHash,
                 UniqueCode = uniqueCode,
                 Role = TaskManagerData.Enums.UserRole.Employee // assuming default role is Employee, adjust accordingly
@@ -71,7 +70,7 @@ namespace AutenticationAutorizationAPI.Services
                 throw new ArgumentException("Invalid Email or Phone Number");
             }
 
-            if (employee == null || !BCrypt.Net.BCrypt.Verify(request.Password, employee.PasswordHash)) // Use BCrypt here
+            if (employee == null || !BCrypt.Net.BCrypt.Verify(request.Password, employee.PasswordHash))
             {
                 return null;
             }
@@ -102,7 +101,7 @@ namespace AutenticationAutorizationAPI.Services
                 new Claim("UniqueCode", employee.UniqueCode),
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("AppSettings:Token").Value)); // Corrected to GetSection
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("AppSettings:Token").Value));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             var token = new JwtSecurityToken(

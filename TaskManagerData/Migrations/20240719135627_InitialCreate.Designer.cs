@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskManagerData.Contexts;
 
@@ -11,9 +12,11 @@ using TaskManagerData.Contexts;
 namespace TaskManagerData.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240719135627_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,7 +59,10 @@ namespace TaskManagerData.Migrations
             modelBuilder.Entity("TaskManagerData.Entities.Employee", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -147,29 +153,6 @@ namespace TaskManagerData.Migrations
                     b.ToTable("Tasks");
                 });
 
-            modelBuilder.Entity("TaskManagerData.Entities.Team", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("TeamLeaderId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TeamLeaderId");
-
-                    b.ToTable("Teams");
-                });
-
             modelBuilder.Entity("TaskManagerData.Entities.Comment", b =>
                 {
                     b.HasOne("TaskManagerData.Entities.Employee", "Employee")
@@ -189,15 +172,6 @@ namespace TaskManagerData.Migrations
                     b.Navigation("ProjectTask");
                 });
 
-            modelBuilder.Entity("TaskManagerData.Entities.Employee", b =>
-                {
-                    b.HasOne("TaskManagerData.Entities.Team", null)
-                        .WithMany("Members")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("TaskManagerData.Entities.ProjectTask", b =>
                 {
                     b.HasOne("TaskManagerData.Entities.Employee", "AssignedToEmployee")
@@ -207,17 +181,6 @@ namespace TaskManagerData.Migrations
                         .IsRequired();
 
                     b.Navigation("AssignedToEmployee");
-                });
-
-            modelBuilder.Entity("TaskManagerData.Entities.Team", b =>
-                {
-                    b.HasOne("TaskManagerData.Entities.Employee", "TeamLeader")
-                        .WithMany()
-                        .HasForeignKey("TeamLeaderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("TeamLeader");
                 });
 
             modelBuilder.Entity("TaskManagerData.Entities.Employee", b =>
@@ -230,11 +193,6 @@ namespace TaskManagerData.Migrations
             modelBuilder.Entity("TaskManagerData.Entities.ProjectTask", b =>
                 {
                     b.Navigation("Comments");
-                });
-
-            modelBuilder.Entity("TaskManagerData.Entities.Team", b =>
-                {
-                    b.Navigation("Members");
                 });
 #pragma warning restore 612, 618
         }

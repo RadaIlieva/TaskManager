@@ -1,46 +1,55 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using TaskManagerData.Contexts;
-using TaskManagerProject.DTOs;
-using TaskManagerProject.Services;
 using TaskManagerProject.Services.Interfaces;
+using TaskManagerProject.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using TaskManagerProject.DTOs;
 
-namespace TaskManagerProject
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
+        // Add services to the container.
+        builder.Services.AddControllersWithViews();
 
-            builder.Services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+        builder.Services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddHttpClient<IAccountService, AccountService>();
-            builder.Services.Configure<ApiUrls>(builder.Configuration.GetSection("ApiUrls"));
+        builder.Services.AddHttpClient<IAccountService, AccountService>();
+        builder.Services.Configure<ApiUrls>(builder.Configuration.GetSection("ApiUrls"));
 
-            var app = builder.Build();
-
-            if (!app.Environment.IsDevelopment())
+        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
             {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
-            }
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+            });
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+        var app = builder.Build();
 
-            app.UseRouting();
-            app.UseAuthorization();
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseExceptionHandler("/Home/Error");
+            app.UseHsts();
+        }
 
-            app.MapControllerRoute(
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+
+        app.UseRouting();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Account}/{action=Login}/{id?}");
+        });
 
-            app.Run();
-        }
+        app.Run();
     }
 }

@@ -12,8 +12,8 @@ using TaskManagerData.Contexts;
 namespace TaskManagerData.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240703104536_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20240719140122_AddTeamsTable")]
+    partial class AddTeamsTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,42 +56,9 @@ namespace TaskManagerData.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("TaskManagerData.Entities.Company", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.ToTable("Companies");
-                });
-
             modelBuilder.Entity("TaskManagerData.Entities.Employee", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("CompanyID")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateOfBirth")
@@ -121,20 +88,29 @@ namespace TaskManagerData.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
+                    b.Property<string>("ProfilePictureUrl")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TeamId")
-                        .HasColumnType("int");
+                    b.Property<string>("UniqueCode")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CompanyID");
 
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.HasIndex("TeamId");
+                    b.HasIndex("PhoneNumber")
+                        .IsUnique();
+
+                    b.HasIndex("UniqueCode")
+                        .IsUnique();
 
                     b.ToTable("Employees");
                 });
@@ -182,23 +158,19 @@ namespace TaskManagerData.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("TeamLeaderId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
-
                     b.HasIndex("TeamLeaderId");
 
-                    b.ToTable("Team");
+                    b.ToTable("Teams");
                 });
 
             modelBuilder.Entity("TaskManagerData.Entities.Comment", b =>
@@ -222,17 +194,11 @@ namespace TaskManagerData.Migrations
 
             modelBuilder.Entity("TaskManagerData.Entities.Employee", b =>
                 {
-                    b.HasOne("TaskManagerData.Entities.Company", "Company")
-                        .WithMany("Employees")
-                        .HasForeignKey("CompanyID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("TaskManagerData.Entities.Team", null)
                         .WithMany("Members")
-                        .HasForeignKey("TeamId");
-
-                    b.Navigation("Company");
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TaskManagerData.Entities.ProjectTask", b =>
@@ -248,28 +214,13 @@ namespace TaskManagerData.Migrations
 
             modelBuilder.Entity("TaskManagerData.Entities.Team", b =>
                 {
-                    b.HasOne("TaskManagerData.Entities.Company", "Company")
-                        .WithMany("Teams")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("TaskManagerData.Entities.Employee", "TeamLeader")
                         .WithMany()
                         .HasForeignKey("TeamLeaderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Company");
-
                     b.Navigation("TeamLeader");
-                });
-
-            modelBuilder.Entity("TaskManagerData.Entities.Company", b =>
-                {
-                    b.Navigation("Employees");
-
-                    b.Navigation("Teams");
                 });
 
             modelBuilder.Entity("TaskManagerData.Entities.Employee", b =>

@@ -14,8 +14,6 @@ namespace TaskManagerData.Configurations
                 .IsRequired()
                 .HasMaxLength(100);
 
-           
-
             builder.HasOne(t => t.TeamLeader)
                 .WithMany()
                 .HasForeignKey(t => t.TeamLeaderId)

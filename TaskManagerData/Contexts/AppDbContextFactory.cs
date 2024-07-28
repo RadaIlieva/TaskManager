@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace TaskManagerData.Contexts
 {
@@ -17,7 +18,7 @@ namespace TaskManagerData.Contexts
 
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            optionsBuilder.UseSqlServer(connectionString);
+            optionsBuilder.UseSqlServer(connectionString, b => b.MigrationsAssembly("TaskManagerData"));
 
             return new AppDbContext(optionsBuilder.Options);
         }
