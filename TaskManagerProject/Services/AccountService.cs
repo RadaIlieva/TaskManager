@@ -2,8 +2,6 @@
 using System.Text;
 using TaskManagerProject.DTOs;
 using TaskManagerProject.Services.Interfaces;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 public class AccountService : IAccountService
 {

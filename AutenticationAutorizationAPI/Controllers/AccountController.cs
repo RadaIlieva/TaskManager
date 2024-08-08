@@ -20,8 +20,16 @@ namespace AutenticationAutorizationAPI.Controllers
         {
             try
             {
-                var employee = await authenticationService.Register(request);
-                return Ok(new { Username = employee.FirstName + " " + employee.LastName, UniqueCode = employee.UniqueCode });
+                var registrationSuccess = await authenticationService.RegisterAsync(request);
+
+                if (registrationSuccess)
+                {
+                    return Ok(new { Message = "Registration successful." });
+                }
+                else
+                {
+                    return BadRequest("Registration failed.");
+                }
             }
             catch (ArgumentException ex)
             {

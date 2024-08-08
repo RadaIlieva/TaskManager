@@ -5,7 +5,7 @@ namespace AutenticationAutorizationAPI.Services.Interfaces
 {
     public interface IAuthenticationService
     {
-        Task<Employee> Register(RegisterUserDto request);
+        Task<bool> RegisterAsync(RegisterUserDto request);
         Task<string> Login(LoginUserDto request);
     }
 }

@@ -5,14 +5,14 @@
 
 <div id="login-form" class="auth-form">
     <h2>Login</h2>
-    <form method="post" action="/Account/Login">
+    <form method="post" asp-action="Login">
         <div>
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" required />
+            <label for="emailOrPhone">Email or Phone</label>
+            <input type="text" id="emailOrPhone" name="EmailOrPhone" required />
         </div>
         <div>
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" required />
+            <input type="password" id="password" name="Password" required />
         </div>
         <div>
             <input type="checkbox" id="remember-me" name="remember-me" />

@@ -31,10 +31,10 @@ public class AccountController : Controller
             if (token != null)
             {
                 var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, model.EmailOrPhone),
-                    new Claim(ClaimTypes.Name, model.EmailOrPhone)
-                };
+            {
+                new Claim(ClaimTypes.NameIdentifier, model.EmailOrPhone),
+                new Claim(ClaimTypes.Name, model.EmailOrPhone)
+            };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
@@ -46,6 +46,8 @@ public class AccountController : Controller
         }
         return View(model);
     }
+
+
 
     // GET: /Account/Register
     public IActionResult Register()

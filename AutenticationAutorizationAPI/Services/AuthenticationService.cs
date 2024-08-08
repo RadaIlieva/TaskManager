@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -27,49 +28,48 @@ namespace AutenticationAutorizationAPI.Services
             this.dbContext = dbContext;
         }
 
-        public async Task<Employee> Register(RegisterUserDto request)
+        public async Task<bool> RegisterAsync(RegisterUserDto registerUserDto)
         {
-            if (request.Password != request.ConfirmPassword)
+            if (await dbContext.Employees.AnyAsync(e => e.Email == registerUserDto.EmailOrPhone || e.PhoneNumber == registerUserDto.EmailOrPhone))
             {
-                throw new ArgumentException("Passwords do not match");
+                throw new ArgumentException("User with this email or phone number already exists.");
             }
-
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
-            string uniqueCode = await GenerateUniqueCode();
 
             var employee = new Employee
             {
-                FirstName = request.Username.Split(' ')[0],
-                LastName = request.Username.Split(' ').Length > 1 ? request.Username.Split(' ')[1] : string.Empty,
-                Email = IsValidEmail(request.Email) ? request.Email : null,
-                PhoneNumber = IsValidPhoneNumber(request.Email) ? request.Email : null,
-                PasswordHash = passwordHash,
-                UniqueCode = uniqueCode,
-                Role = TaskManagerData.Enums.UserRole.Employee // assuming default role is Employee, adjust accordingly
+                FirstName = ExtractFirstName(registerUserDto.Name),
+                LastName = ExtractLastName(registerUserDto.Name),
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerUserDto.Password), 
+                UniqueCode = GenerateUniqueCode(),
+                Role = TaskManagerData.Enums.UserRole.Employee 
             };
 
-            dbContext.Employees.Add(employee);
-            await dbContext.SaveChangesAsync();
-
-            return employee;
-        }
-
-        public async Task<string> Login(LoginUserDto request)
-        {
-            Employee employee;
-            if (IsValidEmail(request.EmailOrPhone))
+            if (IsValidEmail(registerUserDto.EmailOrPhone))
             {
-                employee = await dbContext.Employees.FirstOrDefaultAsync(e => e.Email == request.EmailOrPhone);
+                employee.Email = registerUserDto.EmailOrPhone;
             }
-            else if (IsValidPhoneNumber(request.EmailOrPhone))
+            else if (IsValidPhoneNumber(registerUserDto.EmailOrPhone))
             {
-                employee = await dbContext.Employees.FirstOrDefaultAsync(e => e.PhoneNumber == request.EmailOrPhone);
+                employee.PhoneNumber = registerUserDto.EmailOrPhone;
             }
             else
             {
                 throw new ArgumentException("Invalid Email or Phone Number");
             }
 
+            dbContext.Employees.Add(employee);
+            await dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<string> Login(LoginUserDto request)
+        {
+            
+            var employee = await dbContext.Employees
+                .FirstOrDefaultAsync(e => e.Email == request.EmailOrPhone || e.PhoneNumber == request.EmailOrPhone);
+
+            
             if (employee == null || !BCrypt.Net.BCrypt.Verify(request.Password, employee.PasswordHash))
             {
                 return null;
@@ -80,47 +80,42 @@ namespace AutenticationAutorizationAPI.Services
             return token;
         }
 
-        private async Task<string> GenerateUniqueCode()
-        {
-            string uniqueCode;
-            bool exists;
-
-            do
-            {
-                uniqueCode = new Random().Next(1000, 9999).ToString();
-                exists = await dbContext.Employees.AnyAsync(e => e.UniqueCode == uniqueCode);
-            } while (exists);
-
-            return uniqueCode;
-        }
-
-        private string CreateToken(Employee employee)
-        {
-            List<Claim> claims = new List<Claim>{
-                new Claim(ClaimTypes.Name, employee.FirstName),
-                new Claim("UniqueCode", employee.UniqueCode),
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("AppSettings:Token").Value));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-            var token = new JwtSecurityToken(
-                    claims: claims,
-                    expires: DateTime.Now.AddDays(1),
-                    signingCredentials: creds
-                );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
 
         private bool IsValidEmail(string email)
         {
-            return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+            return new EmailAddressAttribute().IsValid(email);
         }
 
         private bool IsValidPhoneNumber(string phoneNumber)
         {
             return Regex.IsMatch(phoneNumber, @"^\d{10}$");
         }
+
+        private string CreateToken(Employee employee)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, employee.FirstName),
+                new Claim("UniqueCode", employee.UniqueCode),
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AppSettings:Token"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+      
+
+        private string ExtractFirstName(string fullName) => fullName.Split(' ')[0];
+        private string ExtractLastName(string fullName) => fullName.Split(' ').Length > 1 ? fullName.Split(' ')[1] : string.Empty;
+
+        private string GenerateUniqueCode() => new Random().Next(1000, 9999).ToString();
     }
 }
