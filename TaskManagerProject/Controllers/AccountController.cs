@@ -14,6 +14,8 @@ public class AccountController : Controller
         this.accountService = accountService;
     }
 
+ 
+
     // GET: /Account/Login
     public IActionResult Login()
     {
@@ -31,22 +33,21 @@ public class AccountController : Controller
             if (token != null)
             {
                 var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, model.EmailOrPhone),
-                new Claim(ClaimTypes.Name, model.EmailOrPhone)
-            };
+                {
+                    new Claim(ClaimTypes.NameIdentifier, model.UserEmail),
+                    new Claim(ClaimTypes.Name, model.UserEmail)
+                };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "UserProfile");
             }
 
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
         }
         return View(model);
     }
-
 
 
     // GET: /Account/Register

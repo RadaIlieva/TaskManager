@@ -19,9 +19,9 @@ namespace TaskManagerData.Entities
         public string PasswordHash { get; set; } = string.Empty;
         public string UniqueCode { get; set; } = string.Empty;
         public UserRole Role { get; set; }
-        public string ProfilePictureUrl { get; set; } = string.Empty; 
+        public string ProfilePictureUrl { get; set; } = string.Empty;
 
         public List<ProjectTask> ProjectTasks { get; set; } = new List<ProjectTask>();
-        public List<Comment> Comments { get; set; } = new List<Comment>();
+        public List<Team> Teams { get; set; } = new List<Team>();  
     }
 }

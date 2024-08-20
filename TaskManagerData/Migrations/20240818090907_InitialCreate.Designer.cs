@@ -12,8 +12,8 @@ using TaskManagerData.Contexts;
 namespace TaskManagerData.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240719140122_AddTeamsTable")]
-    partial class AddTeamsTable
+    [Migration("20240818090907_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,41 +25,13 @@ namespace TaskManagerData.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("TaskManagerData.Entities.Comment", b =>
+            modelBuilder.Entity("TaskManagerData.Entities.Employee", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TaskId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("TaskId");
-
-                    b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("TaskManagerData.Entities.Employee", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -103,16 +75,49 @@ namespace TaskManagerData.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.HasIndex("PhoneNumber")
-                        .IsUnique();
-
                     b.HasIndex("UniqueCode")
                         .IsUnique();
 
                     b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("TaskManagerData.Entities.Project", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("TaskManagerData.Entities.ProjectTask", b =>
@@ -135,6 +140,9 @@ namespace TaskManagerData.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -147,7 +155,9 @@ namespace TaskManagerData.Migrations
 
                     b.HasIndex("AssignedToEmployeeId");
 
-                    b.ToTable("Tasks");
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectTasks");
                 });
 
             modelBuilder.Entity("TaskManagerData.Entities.Team", b =>
@@ -163,42 +173,43 @@ namespace TaskManagerData.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("TeamLeaderId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TeamLeaderId");
 
                     b.ToTable("Teams");
                 });
 
-            modelBuilder.Entity("TaskManagerData.Entities.Comment", b =>
+            modelBuilder.Entity("TeamEmployee", b =>
                 {
-                    b.HasOne("TaskManagerData.Entities.Employee", "Employee")
-                        .WithMany("Comments")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
 
-                    b.HasOne("TaskManagerData.Entities.ProjectTask", "ProjectTask")
-                        .WithMany("Comments")
-                        .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
 
-                    b.Navigation("Employee");
+                    b.HasKey("EmployeeId", "TeamId");
 
-                    b.Navigation("ProjectTask");
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("TeamEmployee");
                 });
 
-            modelBuilder.Entity("TaskManagerData.Entities.Employee", b =>
+            modelBuilder.Entity("TaskManagerData.Entities.Project", b =>
                 {
-                    b.HasOne("TaskManagerData.Entities.Team", null)
-                        .WithMany("Members")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Restrict)
+                    b.HasOne("TaskManagerData.Entities.Employee", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("TaskManagerData.Entities.Team", "Team")
+                        .WithMany("Projects")
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("TaskManagerData.Entities.ProjectTask", b =>
@@ -209,35 +220,45 @@ namespace TaskManagerData.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("AssignedToEmployee");
-                });
-
-            modelBuilder.Entity("TaskManagerData.Entities.Team", b =>
-                {
-                    b.HasOne("TaskManagerData.Entities.Employee", "TeamLeader")
-                        .WithMany()
-                        .HasForeignKey("TeamLeaderId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                    b.HasOne("TaskManagerData.Entities.Project", "Project")
+                        .WithMany("ProjectTasks")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("TeamLeader");
+                    b.Navigation("AssignedToEmployee");
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("TeamEmployee", b =>
+                {
+                    b.HasOne("TaskManagerData.Entities.Employee", null)
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TaskManagerData.Entities.Team", null)
+                        .WithMany()
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TaskManagerData.Entities.Employee", b =>
                 {
-                    b.Navigation("Comments");
-
                     b.Navigation("ProjectTasks");
                 });
 
-            modelBuilder.Entity("TaskManagerData.Entities.ProjectTask", b =>
+            modelBuilder.Entity("TaskManagerData.Entities.Project", b =>
                 {
-                    b.Navigation("Comments");
+                    b.Navigation("ProjectTasks");
                 });
 
             modelBuilder.Entity("TaskManagerData.Entities.Team", b =>
                 {
-                    b.Navigation("Members");
+                    b.Navigation("Projects");
                 });
 #pragma warning restore 612, 618
         }

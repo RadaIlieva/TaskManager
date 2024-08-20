@@ -12,6 +12,7 @@ namespace TaskManagerData.Entities
         public DateTime EndDate { get; set; }
         public int? AssignedToEmployeeId { get; set; }
         public Employee AssignedToEmployee { get; set; } = null!;
-        public List<Comment> Comments { get; set; } = new List<Comment>();
+        public int ProjectId { get; set; } 
+        public Project Project { get; set; } = null!;
     }
 }

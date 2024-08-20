@@ -30,7 +30,7 @@ namespace AutenticationAutorizationAPI.Services
 
         public async Task<bool> RegisterAsync(RegisterUserDto registerUserDto)
         {
-            if (await dbContext.Employees.AnyAsync(e => e.Email == registerUserDto.EmailOrPhone || e.PhoneNumber == registerUserDto.EmailOrPhone))
+            if (await dbContext.Employees.AnyAsync(e => e.Email == registerUserDto.UserEmail))
             {
                 throw new ArgumentException("User with this email or phone number already exists.");
             }
@@ -44,14 +44,11 @@ namespace AutenticationAutorizationAPI.Services
                 Role = TaskManagerData.Enums.UserRole.Employee 
             };
 
-            if (IsValidEmail(registerUserDto.EmailOrPhone))
+            if (IsValidEmail(registerUserDto.UserEmail))
             {
-                employee.Email = registerUserDto.EmailOrPhone;
+                employee.Email = registerUserDto.UserEmail;
             }
-            else if (IsValidPhoneNumber(registerUserDto.EmailOrPhone))
-            {
-                employee.PhoneNumber = registerUserDto.EmailOrPhone;
-            }
+            
             else
             {
                 throw new ArgumentException("Invalid Email or Phone Number");
@@ -67,7 +64,7 @@ namespace AutenticationAutorizationAPI.Services
         {
             
             var employee = await dbContext.Employees
-                .FirstOrDefaultAsync(e => e.Email == request.EmailOrPhone || e.PhoneNumber == request.EmailOrPhone);
+                .FirstOrDefaultAsync(e => e.Email == request.UserEmail);
 
             
             if (employee == null || !BCrypt.Net.BCrypt.Verify(request.Password, employee.PasswordHash))
@@ -86,10 +83,7 @@ namespace AutenticationAutorizationAPI.Services
             return new EmailAddressAttribute().IsValid(email);
         }
 
-        private bool IsValidPhoneNumber(string phoneNumber)
-        {
-            return Regex.IsMatch(phoneNumber, @"^\d{10}$");
-        }
+       
 
         private string CreateToken(Employee employee)
         {
@@ -99,7 +93,7 @@ namespace AutenticationAutorizationAPI.Services
                 new Claim("UniqueCode", employee.UniqueCode),
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AppSettings:Token"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             var token = new JwtSecurityToken(

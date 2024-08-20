@@ -1,0 +1,108 @@
+﻿@model TaskManagerProject.Models.UserProfileDto
+
+@{
+    ViewData["Title"] = "User Profile";
+}
+
+<div class="profile-page">
+    <h2>Edit Profile</h2>
+
+    <form asp-action="Profile" method="post" enctype="multipart/form-data">
+        <div class="form-group profile-picture">
+            <label>Profile Picture</label>
+            <img src="@(Model?.ProfilePictureUrl ?? "/images/default.png")" id="profilePic" alt="Profile Picture" onclick="document.getElementById('ProfilePicture').click();" />
+            <input type="file" id="ProfilePicture" name="ProfilePicture" style="display:none;" onchange="previewImage(event)" />
+        </div>
+       
+
+        <div class="form-group">
+            <label asp-for="FirstName"></label>
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="LastName"></label>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="DateOfBirth"></label>
+            <input asp-for="DateOfBirth" class="form-control" type="date" value="2007-01-01" min="1940-01-01" max="2007-12-31" />
+            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PhoneNumber"></label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="UniqueCode"></label>
+            <input asp-for="UniqueCode" class="form-control" readonly />
+            <span asp-validation-for="UniqueCode" class="text-danger"></span>
+        </div>
+
+        <input asp-for="Role" type="hidden" />
+
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+
+<script>
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('profilePic');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>
+
+<style>
+    .profile-page {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-picture img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        display: block;
+        margin: 0 auto 20px;
+        border: 5px solid #007bff;
+        cursor: pointer;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .btn-primary {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        border: none;
+        color: white;
+        border-radius: 5px;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+</style>

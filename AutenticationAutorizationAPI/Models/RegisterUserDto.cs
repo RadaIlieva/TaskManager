@@ -1,4 +1,4 @@
-﻿using AutenticationAutorizationAPI.Attributes;
+﻿
 using System.ComponentModel.DataAnnotations;
 
 namespace AutenticationAutorizationAPI.Models
@@ -9,8 +9,7 @@ namespace AutenticationAutorizationAPI.Models
         public string Name { get; set; }
 
         [Required]
-        [EmailAddressOrPhoneNumber]
-        public string EmailOrPhone { get; set; }
+        public string UserEmail { get; set; }
 
         [Required]
         [DataType(DataType.Password)]

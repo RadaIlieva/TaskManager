@@ -1,6 +1,4 @@
-﻿
-
-using TaskManagerProject.Enums;
+﻿using TaskManagerProject.Enums;
 
 namespace TaskManagerProject.Models
 {
@@ -13,8 +11,8 @@ namespace TaskManagerProject.Models
         public string PhoneNumber { get; set; }
         public string PasswordHash { get; set; }
         public string UniqueCode { get; set; }
-        public UserRole Role { get; set; } 
+        public DateTime DateOfBirth { get; set; }  
+        public string ProfilePictureUrl { get; set; }  
+        public UserRole Role { get; set; }
     }
-
-   
 }

@@ -9,7 +9,7 @@ namespace TaskManagerProject.DTOs
 
         [Required]
         [EmailAddress]
-        public string EmailOrPhone { get; set; }
+        public string UserEmail { get; set; }
 
         [Required]
         [DataType(DataType.Password)]

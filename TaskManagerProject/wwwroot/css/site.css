@@ -1,8 +1,9 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f8ff;
+    margin: 0; 
+    padding-bottom: 100px; 
 }
-
 .auth-form {
     background-color: white;
     padding: 2rem;
@@ -10,7 +11,7 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 300px;
     margin: 0 auto;
-    margin-top: 10%;
+    margin-top: 3%;
     text-align: center;
 }
 
@@ -19,7 +20,7 @@ body {
     }
 
     .auth-form div {
-        margin-bottom: 1rem;
+        margin-bottom: 10rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -55,33 +56,42 @@ body {
         margin-top: 1rem;
     }
 
-header {
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
     background-color: #333;
-    color: white;
-    padding: 1rem 0;
 }
 
-    header nav ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
+    .header .user-info {
         display: flex;
-        justify-content: center;
+        align-items: center;
+        margin-left: auto;
     }
 
-        header nav ul li {
-            margin: 0 1rem;
+        .header .user-info img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            cursor: pointer;
         }
 
-            header nav ul li a {
-                color: white;
-                text-decoration: none;
-                font-weight: bold;
-            }
+        .header .user-info .dropdown {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background-color: #ccc;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 10px;
+            border-radius: 5px;
+        }
 
-                header nav ul li a:hover {
-                    text-decoration: underline;
-                }
+        .header .user-info:hover .dropdown {
+            display: block;
+        }
 
 .profile-menu {
     position: relative;
@@ -118,11 +128,19 @@ header {
 
 main {
     padding: 1rem;
+    padding-bottom: 100px; 
 }
 
+
+
 footer {
+    position: fixed; 
+    left: 0;
+    bottom: 0; 
+    width: 100%; 
     text-align: center;
     padding: 1rem;
     background-color: #333;
     color: white;
+    height: 100px;
 }

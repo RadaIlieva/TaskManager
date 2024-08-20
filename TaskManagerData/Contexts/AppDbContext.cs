@@ -12,17 +12,17 @@ namespace TaskManagerData.Contexts
         }
 
         public DbSet<Employee> Employees { get; set; }
-        public DbSet<ProjectTask> Tasks { get; set; }
-        public DbSet<Comment> Comments { get; set; }
+        public DbSet<ProjectTask> ProjectTasks { get; set; }
         public DbSet<Team> Teams { get; set; }
+        public DbSet<Project> Projects { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
-            modelBuilder.ApplyConfiguration(new TaskConfiguration());
-            modelBuilder.ApplyConfiguration(new CommentConfiguration());
+            modelBuilder.ApplyConfiguration(new ProjectConfiguration());
+            modelBuilder.ApplyConfiguration(new ProjectTaskConfiguration());
             modelBuilder.ApplyConfiguration(new TeamConfiguration());
         }
     }

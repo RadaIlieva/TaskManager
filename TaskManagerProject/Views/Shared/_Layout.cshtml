@@ -6,25 +6,22 @@
     <script src="~/js/site.js"></script>
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/Account/Login">Login</a></li>
-                <li><a href="/Account/Register">Register</a></li>
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <li class="profile-menu">
-                        <a href="javascript:void(0);">@User.Identity.Name</a>
-                        <ul>
-                            <li><a href="/Account/Profile">Profile</a></li>
-                            <li><a href="/Account/Logout">Logout</a></li>
-                        </ul>
-                    </li>
-                }
-            </ul>
-        </nav>
-    </header>
+    <div class="header">
+        <div>
+            <h2>@ViewData["Title"]</h2>
+        </div>
+        <div class="user-info">
+            <a href="/UserProfile/Profile">
+                <img src="https://via.placeholder.com/40" alt="User Profile Picture">
+            </a>
+            <div>
+                <span>@ViewBag.UserName</span> <span>#@ViewBag.UserUniqueCode</span>
+                <div class="dropdown">
+                    <a href="/UserProfile/Profile">Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
     <main>
         @RenderBody()
     </main>

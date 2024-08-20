@@ -1,0 +1,83 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" type="text/css" href="~/css/site.css" />
+</head>
+<body>
+    <div class="sidebar">
+        <a href="@Url.Action("Index", "UserProfile")">Home</a>
+        <a href="@Url.Action("NewProject", "Home")">Add New Project</a>
+        <a href="#">Chats</a>
+    </div>
+
+    <div class="main-content">
+        <h2>@ViewBag.UserName's Dashboard</h2>
+        <div class="project-cards">
+            <!-- Project cards will go here -->
+        </div>
+    </div>
+</body>
+</html>
+
+<style>
+    body {
+        background-color: #e0f7fa;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .sidebar {
+        background-color: #b3e5fc;
+        width: 250px;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        overflow-x: hidden;
+        padding-top: 20px;
+    }
+
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: black;
+            display: block;
+            transition: 0.3s;
+        }
+
+            .sidebar a:hover {
+                background-color: #ddd;
+            }
+
+    .main-content {
+        margin-left: 250px;
+        padding: 20px;
+    }
+
+    .project-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .project-card {
+        background-color: white;
+        width: calc(33.333% - 20px);
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+        .project-card:hover {
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
+</style>
