@@ -19,12 +19,10 @@ public class Program
         builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-        // Register services
         builder.Services.AddScoped<IUserProfileService, UserProfileService>();
         builder.Services.AddScoped<IProjectService, ProjectService>();
         builder.Services.AddScoped<IAccountService, AccountService>();
 
-        // Register HttpClient for AccountService
         builder.Services.AddHttpClient<IAccountService, AccountService>();
 
         builder.Services.Configure<ApiUrls>(builder.Configuration.GetSection("ApiUrls"));
@@ -46,7 +44,7 @@ public class Program
 
         if (!app.Environment.IsDevelopment())
         {
-            app.UseExceptionHandler("/Home/Error");
+            app.UseExceptionHandler("/UserProfile/Error");
             app.UseHsts();
         }
 

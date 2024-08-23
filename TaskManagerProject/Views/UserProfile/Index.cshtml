@@ -1,29 +1,38 @@
-﻿@{
-    ViewData["Title"] = "Dashboard";
+﻿@model List<TaskManagerProject.DTOs.ProjectDto>
+
+@{
+    ViewBag.Title = "My Projects";
 }
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" type="text/css" href="~/css/site.css" />
-</head>
-<body>
-    <div class="sidebar">
-        <a href="@Url.Action("Index", "UserProfile")">Home</a>
-        <a href="@Url.Action("NewProject", "Home")">Add New Project</a>
-        <a href="#">Chats</a>
-    </div>
+<div class="main-content">
+    <h2>My projects</h2>
 
-    <div class="main-content">
-        <h2>@ViewBag.UserName's Dashboard</h2>
+    @if (Model != null && Model.Any())
+    {
         <div class="project-cards">
-            <!-- Project cards will go here -->
+            @foreach (var project in Model)
+            {
+                <div class="project-card">
+                    <a href="@Url.Action("Details", "Project", new { id = project.Id })" class="project-title">
+                        @project.Name
+                    </a>
+                    <p class="project-description">@project.Description</p>
+                    <p>Members:</p>
+                    <ul class="team-members">
+                        @foreach (var member in project.Members)
+                        {
+                            <li>@member.Name</li>
+                        }
+                    </ul>
+                </div>
+            }
         </div>
-    </div>
-</body>
-</html>
+    }
+    else
+    {
+        <p>No projects.</p>
+    }
+</div>
 
 <style>
     body {
@@ -33,32 +42,8 @@
         padding: 0;
     }
 
-    .sidebar {
-        background-color: #b3e5fc;
-        width: 250px;
-        height: 100vh;
-        position: fixed;
-        top: 0;
-        left: 0;
-        overflow-x: hidden;
-        padding-top: 20px;
-    }
-
-        .sidebar a {
-            padding: 10px 15px;
-            text-decoration: none;
-            font-size: 18px;
-            color: black;
-            display: block;
-            transition: 0.3s;
-        }
-
-            .sidebar a:hover {
-                background-color: #ddd;
-            }
-
     .main-content {
-        margin-left: 250px;
+        margin-left: 250px; 
         padding: 20px;
     }
 
@@ -72,12 +57,36 @@
         background-color: white;
         width: calc(33.333% - 20px);
         padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease;
     }
 
         .project-card:hover {
             background-color: #f1f1f1;
             cursor: pointer;
+        }
+
+    .project-title {
+        font-size: 1.5em;
+        color: #00796b;
+        text-decoration: none;
+    }
+
+    .project-description {
+        margin-top: 10px;
+        font-size: 1em;
+        color: #555;
+    }
+
+    .team-members {
+        list-style: none;
+        padding-left: 0;
+    }
+
+        .team-members li {
+            margin: 5px 0;
+            font-size: 0.9em;
+            color: #333;
         }
 </style>

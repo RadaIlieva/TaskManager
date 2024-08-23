@@ -13,12 +13,17 @@ namespace TaskManagerProject.Services
 
         public UserProfileService(AppDbContext context)
         {
-            this.context = context;
+            this.context = context; 
         }
 
         public Employee GetEmployeeByEmail(string email)
         {
             return context.Employees.FirstOrDefault(u => u.Email == email);
+        }
+
+        public Employee GetEmployeeByUniqueCode(string uniqueCode)
+        {
+            return context.Employees.FirstOrDefault(u => u.UniqueCode == uniqueCode);
         }
 
         public UserProfileDto GetUserProfileByEmail(string email)
@@ -36,6 +41,42 @@ namespace TaskManagerProject.Services
                 UniqueCode = user.UniqueCode,
                 ProfilePictureUrl = user.ProfilePictureUrl
             };
+        }
+
+        public UserProfileDto GetUserProfileByUniqueCode(string uniqueCode)
+        {
+            var user = GetEmployeeByUniqueCode(uniqueCode);
+            if (user == null) return null;
+
+            return new UserProfileDto
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                UniqueCode = user.UniqueCode,
+                ProfilePictureUrl = user.ProfilePictureUrl
+            };
+        }
+
+        public void UpdateEmployeeProfileWithoutPicture(UserProfileDto model)
+        {
+            var user = context.Employees.Find(model.Id);
+            if (user != null)
+            {
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+
+                if (model.DateOfBirth.HasValue)
+                {
+                    user.DateOfBirth = model.DateOfBirth.Value;
+                }
+
+                user.PhoneNumber = model.PhoneNumber;
+
+                context.SaveChanges();
+            }
         }
 
         public void UpdateEmployeeProfile(UserProfileDto model, IFormFile profilePicture)
@@ -58,28 +99,16 @@ namespace TaskManagerProject.Services
 
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
-                user.DateOfBirth = model.DateOfBirth;
+
+                if (model.DateOfBirth.HasValue)
+                {
+                    user.DateOfBirth = model.DateOfBirth.Value;
+                }
+
                 user.PhoneNumber = model.PhoneNumber;
-                user.UniqueCode = model.UniqueCode;
 
                 context.SaveChanges();
             }
         }
-
-        public void UpdateEmployeeProfileWithoutPicture(UserProfileDto model)
-        {
-            var user = context.Employees.Find(model.Id);
-            if (user != null)
-            {
-                user.FirstName = model.FirstName;
-                user.LastName = model.LastName;
-                user.DateOfBirth = model.DateOfBirth;
-                user.PhoneNumber = model.PhoneNumber;
-                user.UniqueCode = model.UniqueCode;
-
-                context.SaveChanges();
-            }
-        }
-
     }
 }

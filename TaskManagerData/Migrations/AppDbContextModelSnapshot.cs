@@ -22,6 +22,50 @@ namespace TaskManagerData.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Project", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("MemberUniqueCodes")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("Projects");
+                });
+
             modelBuilder.Entity("TaskManagerData.Entities.Employee", b =>
                 {
                     b.Property<int>("Id")
@@ -76,45 +120,6 @@ namespace TaskManagerData.Migrations
                         .IsUnique();
 
                     b.ToTable("Employees");
-                });
-
-            modelBuilder.Entity("TaskManagerData.Entities.Project", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("TeamId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("TaskManagerData.Entities.ProjectTask", b =>
@@ -190,7 +195,7 @@ namespace TaskManagerData.Migrations
                     b.ToTable("TeamEmployee");
                 });
 
-            modelBuilder.Entity("TaskManagerData.Entities.Project", b =>
+            modelBuilder.Entity("Project", b =>
                 {
                     b.HasOne("TaskManagerData.Entities.Employee", "CreatedByUser")
                         .WithMany()
@@ -217,7 +222,7 @@ namespace TaskManagerData.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("TaskManagerData.Entities.Project", "Project")
+                    b.HasOne("Project", "Project")
                         .WithMany("ProjectTasks")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -243,12 +248,12 @@ namespace TaskManagerData.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TaskManagerData.Entities.Employee", b =>
+            modelBuilder.Entity("Project", b =>
                 {
                     b.Navigation("ProjectTasks");
                 });
 
-            modelBuilder.Entity("TaskManagerData.Entities.Project", b =>
+            modelBuilder.Entity("TaskManagerData.Entities.Employee", b =>
                 {
                     b.Navigation("ProjectTasks");
                 });

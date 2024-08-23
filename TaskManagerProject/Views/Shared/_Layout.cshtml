@@ -6,13 +6,19 @@
     <script src="~/js/site.js"></script>
 </head>
 <body>
+    <div class="sidebar" id="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="toggleSidebar()">×</a>
+        <a href="@Url.Action("Index", "UserProfile")">Home</a>
+        <a href="@Url.Action("NewProject", "Project")">Add New Project</a>
+        <a href="#">Chats</a>
+    </div>
+
     <div class="header">
-        <div>
-            <h2>@ViewData["Title"]</h2>
-        </div>
+        <span class="openbtn" onclick="toggleSidebar()"> ☰ </span>
+        <h2>@ViewData["Title"]</h2>
         <div class="user-info">
             <a href="/UserProfile/Profile">
-                <img src="https://via.placeholder.com/40" alt="User Profile Picture">
+                <img src="@(ViewBag.ProfilePictureUrl ?? "https://via.placeholder.com/40")" alt="User Profile Picture">
             </a>
             <div>
                 <span>@ViewBag.UserName</span> <span>#@ViewBag.UserUniqueCode</span>
@@ -28,5 +34,16 @@
     <footer>
         <p>&copy; 2024 - TaskManager</p>
     </footer>
+
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.getElementById("sidebar");
+            if (sidebar.style.width === "250px") {
+                sidebar.style.width = "0";
+            } else {
+                sidebar.style.width = "250px";
+            }
+        }
+    </script>
 </body>
 </html>

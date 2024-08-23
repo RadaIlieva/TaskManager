@@ -2,7 +2,8 @@
 {
     public class NewProjectDto
     {
-        public string ProjectName { get; set; } = string.Empty;
-        public List<string> MembersUniqueCodes { get; set; } = new List<string>();
+        public string ProjectName { get; set; }
+        public string MembersUniqueCodes { get; set; }
+        public string Description { get; set; } 
     }
 }

@@ -13,6 +13,14 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\radai\\Documents\\Projects\\TaskManager\\TaskManagerProject\\wwwroot\\images\\profiles\\189699b82ccca46b9b15c54fda851a2a.jpg",
+      "PackagePath": "staticwebassets\\images\\profiles\\189699b82ccca46b9b15c54fda851a2a.jpg"
+    },
+    {
+      "Id": "C:\\Users\\radai\\Documents\\Projects\\TaskManager\\TaskManagerProject\\wwwroot\\images\\profiles\\7582eb6904d015c40664888034e96231.jpg",
+      "PackagePath": "staticwebassets\\images\\profiles\\7582eb6904d015c40664888034e96231.jpg"
+    },
+    {
       "Id": "C:\\Users\\radai\\Documents\\Projects\\TaskManager\\TaskManagerProject\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "GBZKpDvmWdXVPZbovamXzzYPQdZEdseVGmEpT+XGX9g=",
+  "Hash": "d4oIr03CRK/+yIamcg0QcvT0ZZHjNfe5INruFBA3x38=",
   "Source": "TaskManagerProject",
   "BasePath": "_content/TaskManagerProject",
   "Mode": "Default",
@@ -83,6 +83,40 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Users\\radai\\Documents\\Projects\\TaskManager\\TaskManagerProject\\wwwroot\\images\\profiles\\189699b82ccca46b9b15c54fda851a2a.jpg",
+      "SourceId": "TaskManagerProject",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\radai\\Documents\\Projects\\TaskManager\\TaskManagerProject\\wwwroot\\",
+      "BasePath": "_content/TaskManagerProject",
+      "RelativePath": "images/profiles/189699b82ccca46b9b15c54fda851a2a.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\profiles\\189699b82ccca46b9b15c54fda851a2a.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\radai\\Documents\\Projects\\TaskManager\\TaskManagerProject\\wwwroot\\images\\profiles\\7582eb6904d015c40664888034e96231.jpg",
+      "SourceId": "TaskManagerProject",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\radai\\Documents\\Projects\\TaskManager\\TaskManagerProject\\wwwroot\\",
+      "BasePath": "_content/TaskManagerProject",
+      "RelativePath": "images/profiles/7582eb6904d015c40664888034e96231.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\profiles\\7582eb6904d015c40664888034e96231.jpg"
     },
     {
       "Identity": "C:\\Users\\radai\\Documents\\Projects\\TaskManager\\TaskManagerProject\\wwwroot\\js\\site.js",

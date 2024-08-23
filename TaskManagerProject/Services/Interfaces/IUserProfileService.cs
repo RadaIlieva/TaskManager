@@ -7,8 +7,11 @@ namespace TaskManagerProject.Services
     {
         Employee GetEmployeeByEmail(string email);
         UserProfileDto GetUserProfileByEmail(string email);
+        Employee GetEmployeeByUniqueCode(string uniqueCode);
+        UserProfileDto GetUserProfileByUniqueCode(string uniqueCode);
         void UpdateEmployeeProfile(UserProfileDto model, IFormFile profilePicture);
         void UpdateEmployeeProfileWithoutPicture(UserProfileDto model);
+
     }
 }
     

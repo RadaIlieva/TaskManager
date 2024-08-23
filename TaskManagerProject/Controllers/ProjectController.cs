@@ -24,6 +24,7 @@ namespace TaskManagerProject.Controllers
             return View(new NewProjectDto());
         }
 
+
         [HttpPost]
         public IActionResult NewProject(NewProjectDto model)
         {
@@ -33,14 +34,26 @@ namespace TaskManagerProject.Controllers
 
                 if (createdByUser == null)
                 {
-                    return Unauthorized(); 
+                    return Unauthorized();
                 }
 
-                //projectService.CreateProject(model, createdByUser.Id);
-                return RedirectToAction("Index", "Home");
+                projectService.CreateProject(model, createdByUser.Id);
+                return RedirectToAction("Index", "UserProfile");
             }
 
             return View(model);
         }
+
+        public IActionResult Details(int id)
+        {
+            var projectDetails = projectService.GetProjectDetails(id);
+            if (projectDetails == null)
+            {
+                return NotFound();
+            }
+
+            return View(projectDetails);
+        }
+
     }
 }

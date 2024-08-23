@@ -1,0 +1,27 @@
+﻿@model TaskManagerProject.DTOs.ProjectDetailsDto
+
+@{
+    ViewData["Title"] = Model.ProjectName;
+}
+
+<h2>@Model.ProjectName</h2>
+<p>@Model.Description</p>
+<p>Start Date: @Model.StartDate.ToShortDateString()</p>
+<p>End Date: @Model.EndDate.ToShortDateString()</p>
+
+<h3>Team Members</h3>
+<ul>
+    @foreach (var member in Model.TeamMembers)
+    {
+        <li>@member</li>
+    }
+</ul>
+
+<h3>Tasks</h3>
+<ul>
+    @foreach (var task in Model.ProjectTasks)
+    {
+        <li>@task.Title - Due: @task.EndDate.ToShortDateString()</li>
+    }
+</ul>
+
