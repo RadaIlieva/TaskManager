@@ -91,6 +91,7 @@ namespace AutenticationAutorizationAPI.Services
             {
                 new Claim(ClaimTypes.Name, employee.FirstName),
                 new Claim("UniqueCode", employee.UniqueCode),
+
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));

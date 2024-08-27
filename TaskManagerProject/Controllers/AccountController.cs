@@ -5,81 +5,85 @@ using System.Security.Claims;
 using TaskManagerProject.DTOs;
 using TaskManagerProject.Services.Interfaces;
 
-public class AccountController : Controller
+
+namespace TaskManagerProject.Controllers
 {
-    private readonly IAccountService accountService;
-
-    public AccountController(IAccountService accountService)
+    public class AccountController : Controller
     {
-        this.accountService = accountService;
-    }
+        private readonly IAccountService accountService;
 
- 
-
-    // GET: /Account/Login
-    public IActionResult Login()
-    {
-        return View();
-    }
-
-    // POST: /Account/Login
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(LoginUserDto model)
-    {
-        if (ModelState.IsValid)
+        public AccountController(IAccountService accountService)
         {
-            var token = await accountService.LoginAsync(model);
-            if (token != null)
+            this.accountService = accountService;
+        }
+
+
+
+        // GET: /Account/Login
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        // POST: /Account/Login
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginUserDto model)
+        {
+            if (ModelState.IsValid)
             {
-                var claims = new List<Claim>
+                var token = await accountService.LoginAsync(model);
+                if (token != null)
+                {
+                    var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, model.UserEmail),
                     new Claim(ClaimTypes.Name, model.UserEmail)
                 };
 
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-                return RedirectToAction("Index", "UserProfile");
+                    return RedirectToAction("Index", "UserProfile");
+                }
+
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             }
-
-            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            return View(model);
         }
-        return View(model);
-    }
 
 
-    // GET: /Account/Register
-    public IActionResult Register()
-    {
-        return View();
-    }
-
-    // POST: /Account/Register
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Register(RegisterUserDto model)
-    {
-        if (ModelState.IsValid)
+        // GET: /Account/Register
+        public IActionResult Register()
         {
-            var success = await accountService.RegisterAsync(model);
-            if (success)
-            {
-                return RedirectToAction("Login");
-            }
-
-            ModelState.AddModelError(string.Empty, "Registration failed.");
+            return View();
         }
-        else
+
+        // POST: /Account/Register
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterUserDto model)
         {
-            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            if (ModelState.IsValid)
             {
-                Console.WriteLine(error.ErrorMessage);
+                var success = await accountService.RegisterAsync(model);
+                if (success)
+                {
+                    return RedirectToAction("Login");
+                }
+
+                ModelState.AddModelError(string.Empty, "Registration failed.");
             }
+            else
+            {
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+            }
+
+            return View(model);
         }
 
-        return View(model);
     }
-
 }

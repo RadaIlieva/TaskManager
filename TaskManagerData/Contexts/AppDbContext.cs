@@ -16,6 +16,7 @@ namespace TaskManagerData.Contexts
         public DbSet<Team> Teams { get; set; }
         public DbSet<Project> Projects { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

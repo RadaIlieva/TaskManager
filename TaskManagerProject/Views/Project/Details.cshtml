@@ -1,27 +1,220 @@
 ﻿@model TaskManagerProject.DTOs.ProjectDetailsDto
 
 @{
-    ViewData["Title"] = Model.ProjectName;
+    ViewBag.Title = Model.ProjectName;
+    
 }
 
-<h2>@Model.ProjectName</h2>
-<p>@Model.Description</p>
-<p>Start Date: @Model.StartDate.ToShortDateString()</p>
-<p>End Date: @Model.EndDate.ToShortDateString()</p>
 
-<h3>Team Members</h3>
-<ul>
-    @foreach (var member in Model.TeamMembers)
+    <style>
+        body {
+            width: 110%;
+            padding: 0;
+            margin: 0;
+        }
+
+        #calendar {
+            width: 380px;
+            position: absolute;
+            top: 130px;
+            right: 25px;
+            z-index: 1000;
+        }
+
+        .container {
+            padding-right: 320px;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .project-description {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .team-members-table {
+            width: 500px;
+        }
+        
+
+        .calendar-container {
+            margin-bottom: 20px; 
+        }
+    </style>
+
+<body class="container-fluid">
+
+    <h2 class="my-4">@Model.ProjectName</h2>
+    <p>@Model.Description</p>
+
+    <h3 class="my-4">Team Members</h3>
+    <table class="table team-members-table mb-4">
+        <tbody>
+            @foreach (var member in Model.TeamMembers)
+            {
+                <tr>
+                    <td>@member.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    
+    <div class="calendar-container">
+        <div id='calendar'></div>
+    </div>
+
+    
+    @if (ViewBag.IsCreator)
     {
-        <li>@member</li>
+       
+        <form id="taskForm" class="form-inline mt-4">
+            <select id="assignee" class="form-control mr-2">
+                @foreach (var member in Model.TeamMembers)
+                {
+                    <option value="@member.Id">@member.Name</option>
+                }
+            </select>
+            <input type="text" id="taskName" class="form-control mr-2" placeholder="Task Name" />
+            <input type="text" id="taskDescription" class="form-control mr-2" placeholder="Task Description" />
+            <input type="date" id="startDate" class="form-control mr-2" />
+            <input type="date" id="endDate" class="form-control mr-2" />
+            <input type="hidden" id="projectId" value="@Model.Id" />
+            <button type="button" class="btn btn-primary" onclick="addTask()">Add Task</button>
+        </form>
     }
-</ul>
 
-<h3>Tasks</h3>
-<ul>
-    @foreach (var task in Model.ProjectTasks)
-    {
-        <li>@task.Title - Due: @task.EndDate.ToShortDateString()</li>
-    }
-</ul>
+    
+    <h3 class="my-4">Added Tasks</h3>
+    <table class="table table-bordered mt-4" id="tasksTable">
+        <thead>
+            <tr>
+                <th>Team Member</th>
+                <th>Task Name</th>
+                <th>Task Description</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="tasksTableBody">
+            @foreach (var task in Model.ProjectTasks)
+            {
+                <tr>
+                    <td>@task.AssignedToEmployeeName</td>
+                    <td>@task.Title</td>
+                    <td>@task.Description</td>
+                    <td>
+                        @if (ViewBag.IsCreator) 
+                        {
+                            @using (Html.BeginForm("DeleteTask", "Project", FormMethod.Post, new { @class = "d-inline" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("taskId", task.Id)
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
 
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                events: [
+        @foreach (var task in Model.ProjectTasks)
+        {
+            <text>
+                        {
+                            title: '@task.Title',
+                            start: '@task.StartDate.ToString("yyyy-MM-dd")',
+                            end: '@task.EndDate.ToString("yyyy-MM-dd")'
+                        },
+            </text>
+        }
+                        ],
+                eventClick: function (info) {
+                    alert('Task: ' + info.event.title);
+                }
+            });
+
+            calendar.render();
+
+            window.addTask = function () {
+                var taskName = document.getElementById("taskName").value;
+                var taskDescription = document.getElementById("taskDescription").value;
+                var startDate = document.getElementById("startDate").value;
+                var endDate = document.getElementById("endDate").value;
+                var assignedToEmployeeId = document.getElementById("assignee").value;
+                var projectId = document.getElementById("projectId").value;
+
+                if (!taskName || !taskDescription || !startDate || !endDate || !assignedToEmployeeId || !projectId) {
+                    alert("Please fill all fields!");
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("AddTask", "Project")',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        Title: taskName,
+                        Description: taskDescription,
+                        StartDate: startDate,
+                        EndDate: endDate,
+                        AssignedToEmployeeId: parseInt(assignedToEmployeeId),
+                        ProjectId: parseInt(projectId)
+                    }),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        if (response.success) {
+                            calendar.addEvent({
+                                title: taskName,
+                                start: startDate,
+                                end: endDate
+                            });
+
+                            var newRow = `<tr>
+                                            <td>${document.getElementById("assignee").options[document.getElementById("assignee").selectedIndex].text}</td>
+                                            <td>${taskName}</td>
+                                            <td>${taskDescription}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-danger btn-sm" onclick="confirmDeleteTask(${response.taskId})">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </td>
+                                          </tr>`;
+                            document.getElementById("tasksTableBody").insertAdjacentHTML('beforeend', newRow);
+
+                            document.getElementById("taskName").value = "";
+                            document.getElementById("taskDescription").value = "";
+                            document.getElementById("startDate").value = "";
+                            document.getElementById("endDate").value = "";
+                        } else {
+                            alert("Failed to add task: " + response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error: " + error);
+                    }
+                });
+            };
+        });
+
+        
+
+        
+    </script>
+
+</html>

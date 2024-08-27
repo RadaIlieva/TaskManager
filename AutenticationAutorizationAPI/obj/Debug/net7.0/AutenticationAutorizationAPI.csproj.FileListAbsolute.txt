@@ -68,7 +68,6 @@ C:\Users\radai\Documents\Projects\TaskManager\AutenticationAutorizationAPI\obj\D
 C:\Users\radai\Documents\Projects\TaskManager\AutenticationAutorizationAPI\obj\Debug\net7.0\AutenticationAutorizationAPI.AssemblyInfoInputs.cache
 C:\Users\radai\Documents\Projects\TaskManager\AutenticationAutorizationAPI\obj\Debug\net7.0\AutenticationAutorizationAPI.AssemblyInfo.cs
 C:\Users\radai\Documents\Projects\TaskManager\AutenticationAutorizationAPI\obj\Debug\net7.0\AutenticationAutorizationAPI.csproj.CoreCompileInputs.cache
-C:\Users\radai\Documents\Projects\TaskManager\AutenticationAutorizationAPI\obj\Debug\net7.0\AutenticationAutorizationAPI.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\radai\Documents\Projects\TaskManager\AutenticationAutorizationAPI\obj\Debug\net7.0\AutenticationAutorizationAPI.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\radai\Documents\Projects\TaskManager\AutenticationAutorizationAPI\obj\Debug\net7.0\staticwebassets\msbuild.AutenticationAutorizationAPI.Microsoft.AspNetCore.StaticWebAssets.props
 C:\Users\radai\Documents\Projects\TaskManager\AutenticationAutorizationAPI\obj\Debug\net7.0\staticwebassets\msbuild.build.AutenticationAutorizationAPI.props
@@ -84,3 +83,4 @@ C:\Users\radai\Documents\Projects\TaskManager\AutenticationAutorizationAPI\obj\D
 C:\Users\radai\Documents\Projects\TaskManager\AutenticationAutorizationAPI\obj\Debug\net7.0\AutenticationAutorizationAPI.pdb
 C:\Users\radai\Documents\Projects\TaskManager\AutenticationAutorizationAPI\obj\Debug\net7.0\AutenticationAutorizationAPI.genruntimeconfig.cache
 C:\Users\radai\Documents\Projects\TaskManager\AutenticationAutorizationAPI\obj\Debug\net7.0\ref\AutenticationAutorizationAPI.dll
+C:\Users\radai\Documents\Projects\TaskManager\AutenticationAutorizationAPI\obj\Debug\net7.0\AutenticationAutorizationAPI.MvcApplicationPartsAssemblyInfo.cs

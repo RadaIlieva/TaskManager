@@ -7,8 +7,9 @@
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public string MembersUniqueCodes { get; set; }
-        public List<string> TeamMembers { get; set; } = new List<string>();
-        public List<ProjectTaskDto> ProjectTasks { get; set; } = new List<ProjectTaskDto>();
+        public List<MemberDto> TeamMembers { get; set; }
+        public List<ProjectTaskDto> ProjectTasks { get; set; }
+        public int CreatedByUserId { get; set; }
+        public bool IsCreator { get; set; }
     }
 }

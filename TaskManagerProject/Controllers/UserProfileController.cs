@@ -38,12 +38,13 @@ namespace TaskManagerProject.Controllers
                 {
                     return RedirectToAction("Index", "UserProfile");
                 }
+                ViewBag.ProfilePictureUrl = model.ProfilePictureUrl;
 
                 return View(model);
             }
 
             [HttpPost]
-            public IActionResult Profile(UserProfileDto model, IFormFile ProfilePicture)
+            public IActionResult Profile(UserProfileDto model, IFormFile profilePicture)
             {
                 if (ModelState.IsValid)
                 {
@@ -53,17 +54,18 @@ namespace TaskManagerProject.Controllers
                     {
                         currentUser.FirstName = string.IsNullOrEmpty(model.FirstName) ? currentUser.FirstName : model.FirstName;
                         currentUser.LastName = string.IsNullOrEmpty(model.LastName) ? currentUser.LastName : model.LastName;
-                        currentUser.DateOfBirth = model.DateOfBirth ?? currentUser.DateOfBirth; 
+                        currentUser.DateOfBirth = model.DateOfBirth ?? currentUser.DateOfBirth;
                         currentUser.Email = string.IsNullOrEmpty(model.Email) ? currentUser.Email : model.Email;
                         currentUser.PhoneNumber = string.IsNullOrEmpty(model.PhoneNumber) ? currentUser.PhoneNumber : model.PhoneNumber;
-                        if (ProfilePicture != null && ProfilePicture.Length > 0)
+
+                        if (profilePicture != null && profilePicture.Length > 0)
                         {
-                            var fileName = Path.GetFileName(ProfilePicture.FileName);
+                            var fileName = Path.GetFileName(profilePicture.FileName);
                             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/profiles", fileName);
 
                             using (var stream = new FileStream(filePath, FileMode.Create))
                             {
-                                ProfilePicture.CopyTo(stream);
+                                profilePicture.CopyTo(stream);
                             }
 
                             currentUser.ProfilePictureUrl = $"/images/profiles/{fileName}";
@@ -72,11 +74,12 @@ namespace TaskManagerProject.Controllers
                         context.SaveChanges();
                     }
 
-                    return RedirectToAction("Index", "UserProfile");
+                    return RedirectToAction("Profile");
                 }
 
                 return View(model);
             }
+
 
             public IActionResult Index()
             {
@@ -121,7 +124,7 @@ namespace TaskManagerProject.Controllers
 
 
             public IActionResult Dashboard()
-         {
+            {
                 var userEmail = User.Identity.Name;
                 var user = userService.GetUserProfileByEmail(userEmail);
 

@@ -7,14 +7,13 @@
 <div class="profile-page">
     <h2>Edit Profile</h2>
 
-    <form asp-action="Profile" method="post" enctype="multipart/form-data">
-        <div class="form-group profile-picture">
-            <label>Profile Picture</label>
-            <img src="@(Model?.ProfilePictureUrl ?? "/images/default.png")" id="profilePic" alt="Profile Picture" onclick="document.getElementById('ProfilePicture').click();" />
-            <input type="file" id="ProfilePicture" name="ProfilePicture" style="display:none;" onchange="previewImage(event)" />
-        </div>
-       
+    <div class="form-group profile-picture">
+        <label>Profile Picture</label>
+        <img src="@(Model?.ProfilePictureUrl ?? "/images/default.png")" id="profilePic" alt="Profile Picture" onclick="document.getElementById('ProfilePicture').click();" />
+        <input type="file" id="ProfilePicture" name="ProfilePicture" style="display:none;" onchange="previewImage(event)" />
+    </div>
 
+    <form asp-action="Profile" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label asp-for="FirstName"></label>
             <input asp-for="FirstName" class="form-control" />
@@ -29,7 +28,7 @@
 
         <div class="form-group">
             <label asp-for="DateOfBirth"></label>
-            <input asp-for="DateOfBirth" class="form-control" type="date" value="2007-01-01" min="1940-01-01" max="2007-12-31" />
+            <input asp-for="DateOfBirth" class="form-control" type="date" />
             <span asp-validation-for="DateOfBirth" class="text-danger"></span>
         </div>
 
@@ -51,10 +50,20 @@
             <span asp-validation-for="UniqueCode" class="text-danger"></span>
         </div>
 
-
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
 </div>
+
+<script>
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('profilePic');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>
 
 <script>
     function previewImage(event) {

@@ -78,3 +78,10 @@ C:\Users\radai\Documents\Projects\TaskManager\TaskManagerProject\bin\Debug\net7.
 C:\Users\radai\Documents\Projects\TaskManager\TaskManagerProject\bin\Debug\net7.0\TaskManagerData.pdb
 C:\Users\radai\Documents\Projects\TaskManager\TaskManagerProject\obj\Debug\net7.0\TaskManagerProject.csproj.CopyComplete
 C:\Users\radai\Documents\Projects\TaskManager\TaskManagerProject\bin\Debug\net7.0\Newtonsoft.Json.dll
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerProject\bin\Debug\net7.0\System.Web.Mvc.dll
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerProject\bin\Debug\net7.0\System.Web.Razor.dll
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerProject\bin\Debug\net7.0\System.Web.Helpers.dll
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerProject\bin\Debug\net7.0\System.Web.WebPages.Deployment.dll
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerProject\bin\Debug\net7.0\System.Web.WebPages.Razor.dll
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerProject\bin\Debug\net7.0\System.Web.WebPages.dll
+C:\Users\radai\Documents\Projects\TaskManager\TaskManagerProject\bin\Debug\net7.0\Microsoft.Web.Infrastructure.dll

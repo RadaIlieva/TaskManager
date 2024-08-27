@@ -4,6 +4,7 @@ using TaskManagerProject.Services.Interfaces;
 using TaskManagerData.Entities;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using Microsoft.EntityFrameworkCore;
 
 namespace TaskManagerProject.Services
 {
@@ -15,6 +16,18 @@ namespace TaskManagerProject.Services
         {
             this.context = context; 
         }
+
+        public int GetUserIdByEmail(string email)
+        {
+            var user = context.Employees.FirstOrDefault(e => e.Email == email);
+            if (user == null)
+            {
+                Console.WriteLine($"User with email {email} not found.");
+                return 0; // Върнете 0, ако не е намерен
+            }
+            return user.Id; // Върнете идентификатора на потребителя
+        }
+
 
         public Employee GetEmployeeByEmail(string email)
         {

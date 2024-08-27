@@ -5,10 +5,20 @@ namespace TaskManagerProject.Services
 {
     public interface IProjectService
     {
-        void CreateProject(NewProjectDto projectDto, int createdByUserId);
-
-        public List<ProjectDto> GetProjectsForUser(string uniqueCode);
+        void CreateProject(NewProjectDto model, int createdByUserId);
         ProjectDetailsDto GetProjectDetails(int projectId);
+        ServiceResult AddTaskToProject(ProjectTaskDto taskDto); 
+        ProjectTaskDto GetTaskById(int taskId); 
+        ServiceResult UpdateTaskStatus(int taskId, string status);
+        ServiceResult CreateTask(ProjectTaskDto model, int currentUserId);
+
+        ServiceResult UpdateTaskDescription(int taskId, string newDescription);
+        ServiceResult DeleteTask(int taskId);
+
+        List<ProjectDto> GetProjectsForUser(string uniqueCode);
+        Project GetProjectById(int projectId);
+
+
 
     }
 }
