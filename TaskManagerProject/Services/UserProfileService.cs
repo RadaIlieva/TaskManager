@@ -23,9 +23,9 @@ namespace TaskManagerProject.Services
             if (user == null)
             {
                 Console.WriteLine($"User with email {email} not found.");
-                return 0; // Върнете 0, ако не е намерен
+                return 0; 
             }
-            return user.Id; // Върнете идентификатора на потребителя
+            return user.Id; 
         }
 
 

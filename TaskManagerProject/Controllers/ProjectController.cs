@@ -23,6 +23,16 @@ namespace TaskManagerProject.Controllers
 
         public IActionResult NewProject()
         {
+            var userEmail = User.Identity.Name;
+            var currentUser = userService.GetUserProfileByEmail(userEmail);
+
+            if (currentUser != null)
+            {
+                ViewBag.UserName = $"{currentUser.FirstName} {currentUser.LastName}";
+                ViewBag.UserUniqueCode = currentUser.UniqueCode;
+                ViewBag.ProfilePictureUrl = currentUser.ProfilePictureUrl; 
+            }
+
             return View(new NewProjectDto());
         }
 

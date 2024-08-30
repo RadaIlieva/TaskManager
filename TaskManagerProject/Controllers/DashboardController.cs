@@ -47,7 +47,8 @@ namespace TaskManagerProject.Controllers
                                        .ToList();
 
             ViewBag.UserName = currentUser.FirstName + " " + currentUser.LastName;
-            ViewBag.ProfilePictureUrl = currentUser.ProfilePictureUrl; 
+            ViewBag.UserUniqueCode = currentUser.UniqueCode;
+            ViewBag.ProfilePictureUrl = currentUser.ProfilePictureUrl;
 
             return View(userProjects);
         }

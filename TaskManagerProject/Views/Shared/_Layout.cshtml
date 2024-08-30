@@ -25,20 +25,28 @@
 
 
     <div class="header">
-    <span class="openbtn" onclick="toggleSidebar()"> ☰ </span>
-    <h2>@ViewData["Title"]</h2>
-    <div class="user-info">
-        <a href="/UserProfile/Profile">
-            <img src="@(string.IsNullOrEmpty(ViewBag.ProfilePictureUrl) ? "/images/default.png" : ViewBag.ProfilePictureUrl)" alt="User Profile Picture" class="profile-pic">
-        </a>
-        <div>
-            <span>@ViewBag.UserName</span> <span>#@ViewBag.UserUniqueCode</span>
-            <div class="dropdown">
-                <a href="/UserProfile/Profile">Profile</a>
+        <span class="openbtn" onclick="toggleSidebar()"> ☰ </span>
+        <h2>@ViewData["Title"]</h2>
+        <div class="user-info">
+            <a href="/UserProfile/Profile">
+                @if (string.IsNullOrEmpty(ViewBag.ProfilePictureUrl))
+                {
+                    <i class="fas fa-user-circle fa-2x"></i>
+                }
+                else
+                {
+                    <img src="@ViewBag.ProfilePictureUrl" alt="User Profile Picture" class="profile-pic">
+                }
+            </a>
+            <div>
+                <span>@ViewBag.UserName</span> <span>#@ViewBag.UserUniqueCode</span>
+                <div class="dropdown">
+                    <a href="/UserProfile/Profile">Profile</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
     <main>
         @RenderBody()
     </main>

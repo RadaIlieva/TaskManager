@@ -38,43 +38,26 @@ namespace TaskManagerProject.Controllers
                 {
                     return RedirectToAction("Index", "UserProfile");
                 }
+
+                ViewBag.UserName = $"{model.FirstName} {model.LastName}";
+                ViewBag.UserUniqueCode = model.UniqueCode;
                 ViewBag.ProfilePictureUrl = model.ProfilePictureUrl;
 
                 return View(model);
             }
-
             [HttpPost]
             public IActionResult Profile(UserProfileDto model, IFormFile profilePicture)
             {
                 if (ModelState.IsValid)
                 {
-                    var currentUser = userService.GetEmployeeByEmail(User.Identity.Name);
+                    var userEmail = User.Identity.Name;
+                    var userId = userService.GetUserIdByEmail(userEmail);
 
-                    if (currentUser != null)
+                    if (userId > 0)
                     {
-                        currentUser.FirstName = string.IsNullOrEmpty(model.FirstName) ? currentUser.FirstName : model.FirstName;
-                        currentUser.LastName = string.IsNullOrEmpty(model.LastName) ? currentUser.LastName : model.LastName;
-                        currentUser.DateOfBirth = model.DateOfBirth ?? currentUser.DateOfBirth;
-                        currentUser.Email = string.IsNullOrEmpty(model.Email) ? currentUser.Email : model.Email;
-                        currentUser.PhoneNumber = string.IsNullOrEmpty(model.PhoneNumber) ? currentUser.PhoneNumber : model.PhoneNumber;
-
-                        if (profilePicture != null && profilePicture.Length > 0)
-                        {
-                            var fileName = Path.GetFileName(profilePicture.FileName);
-                            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/profiles", fileName);
-
-                            using (var stream = new FileStream(filePath, FileMode.Create))
-                            {
-                                profilePicture.CopyTo(stream);
-                            }
-
-                            currentUser.ProfilePictureUrl = $"/images/profiles/{fileName}";
-                        }
-
-                        context.SaveChanges();
+                        userService.UpdateEmployeeProfile(model, profilePicture);
+                        return RedirectToAction("Profile");
                     }
-
-                    return RedirectToAction("Profile");
                 }
 
                 return View(model);
@@ -83,42 +66,25 @@ namespace TaskManagerProject.Controllers
 
             public IActionResult Index()
             {
-                try
+                var userEmail = User.Identity?.Name;
+                if (string.IsNullOrEmpty(userEmail))
                 {
-                    var userEmail = User.Identity?.Name;
-                    if (string.IsNullOrEmpty(userEmail))
-                    {
-                        return RedirectToAction("Login", "Account");
-                    }
-
-                    var user = userService.GetEmployeeByEmail(userEmail);
-                    if (user == null)
-                    {
-                        return RedirectToAction("Login", "Account");
-                    }
-
-                    if (string.IsNullOrEmpty(user.UniqueCode))
-                    {
-                        return RedirectToAction("Login", "Account");
-                    }
-
-                    if (projectService == null)
-                    {
-                        return RedirectToAction("Error", "Home");
-                    }
-
-                    ViewBag.UserName = user.FirstName + " " + user.LastName;
-                    ViewBag.UserUniqueCode = user.UniqueCode;
-
-                    var userProjects = projectService.GetProjectsForUser(user.UniqueCode);
-
-                    return View(userProjects);
+                    return RedirectToAction("Login", "Account");
                 }
-                catch (Exception ex)
+
+                var user = userService.GetEmployeeByEmail(userEmail);
+                if (user == null)
                 {
-                    Console.WriteLine(ex.Message);
-                    return RedirectToAction("Error", "Home");
+                    return RedirectToAction("Login", "Account");
                 }
+
+                ViewBag.UserName = user.FirstName + " " + user.LastName;
+                ViewBag.UserUniqueCode = user.UniqueCode;
+                ViewBag.ProfilePictureUrl = user.ProfilePictureUrl; 
+
+                var userProjects = projectService.GetProjectsForUser(user.UniqueCode);
+
+                return View(userProjects);
             }
 
 
