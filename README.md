@@ -37,7 +37,11 @@ Tasks are displayed on a calendar to visualize project timelines.
 
 --------------------------------------------------------------------------------------------------
 Dependencies
+
 ASP.NET Core MVC: Framework for building web applications using the MVC pattern.
+
 Entity Framework Core: ORM for interacting with the SQL Server database.
+
 Bootstrap: CSS framework for responsive design.
+
 FullCalendar: JavaScript library for creating and managing calendars.
