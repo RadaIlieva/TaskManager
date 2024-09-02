@@ -9,7 +9,7 @@ PROJECT DESCRIPTION
 
 The project consists of three main components:
 
-API Project - responsible for providing REST API endpoints for user authentication and authorization. It contains controllers for registration, login, and other profile-related functionalities. The API uses Entity Framework Core for database access and JWT tokens for authentication.
+API Project - responsible for providing REST API endpoints for user authentication and authorization. It contains controllers for registration and login functionalities. The API uses Entity Framework Core for database access and JWT tokens for authentication.
 
 Data Library - contains the database context and models used by the API and MVC projects. It defines the structure of the database and provides methods for accessing and manipulating the data.
 
