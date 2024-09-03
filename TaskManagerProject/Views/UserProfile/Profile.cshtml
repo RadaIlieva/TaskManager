@@ -65,17 +65,6 @@
     }
 </script>
 
-<script>
-    function previewImage(event) {
-        var reader = new FileReader();
-        reader.onload = function () {
-            var output = document.getElementById('profilePic');
-            output.src = reader.result;
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    }
-</script>
-
 <style>
     .profile-page {
         max-width: 600px;
