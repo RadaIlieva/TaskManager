@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagerProject.Models;
+using System.Text;
 
 namespace TaskManagerProject.Services
 {
@@ -51,6 +52,7 @@ namespace TaskManagerProject.Services
 
             context.Projects.Add(project);
             context.SaveChanges();
+
         }
 
         public List<ProjectDto> GetProjectsForUser(string uniqueCode)
@@ -93,7 +95,8 @@ namespace TaskManagerProject.Services
                 TeamMembers = project.Team.Members.Select(m => new MemberDto
                 {
                     Id = m.Id,
-                    Name = $"{m.FirstName} {m.LastName}"
+                    Name = $"{m.FirstName} {m.LastName}",
+                    ProfilePictureUrl = m.ProfilePictureUrl 
                 }).ToList(),
                 ProjectTasks = project.ProjectTasks.Select(t => new ProjectTaskDto
                 {
@@ -112,135 +115,91 @@ namespace TaskManagerProject.Services
             return projectDetails;
         }
 
-        public ServiceResult AddTaskToProject(ProjectTaskDto taskDto)
+
+        public ServiceResult AddMemberToProject(int projectId, string uniqueCode)
         {
-            try
+            var project = context.Projects
+                .Include(p => p.Team)
+                .FirstOrDefault(p => p.Id == projectId);
+
+            if (projectId <= 0)
             {
-                var newTask = new TaskManagerData.Entities.ProjectTask
+                return new ServiceResult { Success = false, ErrorMessage = "Invalid project ID." };
+            }
+
+            if (project == null)
+            {
+                return new ServiceResult { Success = false, ErrorMessage = "Project not found." };
+            }
+
+            var employee = context.Employees.FirstOrDefault(e => e.UniqueCode == uniqueCode);
+            if (employee == null)
+            {
+                return new ServiceResult { Success = false, ErrorMessage = "Employee not found." };
+            }
+
+            if (project.Team.Members.Contains(employee))
+            {
+                return new ServiceResult { Success = false, ErrorMessage = "Employee is already a member of the project." };
+            }
+
+            if (!project.MemberUniqueCodes.Contains(employee.UniqueCode))
+            {
+                var existingCodes = project.MemberUniqueCodes.Split(',');
+                var builder = new StringBuilder();
+                foreach (var code in existingCodes)
                 {
-                    Title = taskDto.Title,
-                    Description = taskDto.Description,
-                    StartDate = taskDto.StartDate,
-                    EndDate = taskDto.EndDate,
-                    AssignedToEmployeeId = taskDto.AssignedToEmployeeId,
-                    ProjectId = taskDto.ProjectId
-                };
-
-                context.ProjectTasks.Add(newTask);
-                context.SaveChanges();
-
-                return new ServiceResult { Success = true };
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResult { Success = false, ErrorMessage = ex.Message };
-            }
-        }
-
-        public ProjectTaskDto GetTaskById(int taskId)
-        {
-            var task = context.ProjectTasks.Find(taskId);
-            if (task == null)
-                return null;
-
-            return new ProjectTaskDto
-            {
-                Id = task.Id,
-                Title = task.Title,
-                Description = task.Description,
-                StartDate = task.StartDate,
-                EndDate = task.EndDate,
-                AssignedToEmployeeId = task.AssignedToEmployeeId ?? 0,
-                ProjectId = task.ProjectId
-            };
-        }
-
-        public Project GetProjectById(int projectId)
-        {
-            return context.Projects.Find(projectId); 
-        }
-
-        public ServiceResult UpdateTaskStatus(int taskId, string status)
-        {
-            var task = context.ProjectTasks.Find(taskId);
-            if (task == null)
-            {
-                return new ServiceResult { Success = false, ErrorMessage = "Task not found." };
+                    builder.Append(code).Append(',');
+                }
+                builder.Append(employee.UniqueCode);
+                project.MemberUniqueCodes = builder.ToString();
             }
 
-            context.SaveChanges();
-            return new ServiceResult { Success = true };
-        }
-
-        public ServiceResult CreateTask(ProjectTaskDto model, int currentUserId)
-        {
-            var project = GetProjectById(model.ProjectId);
-
-            if (project == null || project.CreatedByUserId != currentUserId)
-            {
-                return new ServiceResult { Success = false, ErrorMessage = "Unauthorized" };
-            }
-
-            var task = new TaskManagerData.Entities.ProjectTask
-            {
-                Title = model.Title,
-                Description = model.Description,
-                AssignedToEmployeeId = model.AssignedToEmployeeId,
-                ProjectId = model.ProjectId,
-                StartDate = DateTime.Now
-            };
-
-            context.Add(task);
+            project.Team.Members.Add(employee);
             context.SaveChanges();
 
             return new ServiceResult { Success = true };
         }
 
-        [HttpPost]
-        public IActionResult DeleteTaskAction(int taskId)
+        public ServiceResult RemoveMemberFromProject(int projectId, int memberId)
         {
-            var result = DeleteTask(taskId);
-            if (result.Success)
-            {
-                return RedirectToAction("Details", new { id = result.ProjectId });
-            }
-            else
-            {
-                ModelState.AddModelError("", result.ErrorMessage);
-                var projectDetails = GetProjectDetails(result.ProjectId);
-                return View("Details", projectDetails);
-            }
-        }
+            var project = context.Projects.Include(p => p.Team)
+                              .FirstOrDefault(p => p.Id == projectId);
 
-        public ServiceResult DeleteTask(int taskId)
-        {
-            var task = context.ProjectTasks.Find(taskId);
-            if (task == null)
+           
+
+            if (project == null)
             {
-                return new ServiceResult { Success = false, ErrorMessage = "Task not found." };
+                return new ServiceResult { Success = false, ErrorMessage = "Project not found." };
             }
 
-            var projectId = task.ProjectId;
-
-            context.ProjectTasks.Remove(task);
-            context.SaveChanges();
-
-            return new ServiceResult { Success = true, ProjectId = projectId }; 
-        }
-
-        public ServiceResult UpdateTaskDescription(int taskId, string newDescription)
-        {
-            var task = context.ProjectTasks.Find(taskId);
-            if (task == null)
+            var member = project.Team.Members.FirstOrDefault(m => m.Id == memberId);
+            if (member == null)
             {
-                return new ServiceResult { Success = false, ErrorMessage = "Task not found." };
+                return new ServiceResult { Success = false, ErrorMessage = "Member not found." };
             }
 
-            task.Description = newDescription;
+            if (member.Id == project.CreatedByUserId)
+            {
+                return new ServiceResult { Success = false, ErrorMessage = "Cannot remove the project creator." };
+            }
+
+            project.Team.Members.Remove(member);
+
+            var updatedUniqueCodes = project.MemberUniqueCodes.Split(',')
+                .Where(code => code != member.UniqueCode)
+                .ToArray();
+            project.MemberUniqueCodes = string.Join(",", updatedUniqueCodes);
+
             context.SaveChanges();
 
             return new ServiceResult { Success = true };
         }
+
+
+
+
+
     }
 }
 

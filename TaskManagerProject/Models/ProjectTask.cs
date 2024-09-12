@@ -1,19 +1,16 @@
-﻿using TaskManagerData.Entities;
-
-namespace TaskManagerProject.Models
+﻿namespace TaskManagerProject.DTOs
 {
-    public class ProjectTask
+    public class ProjectTaskDto
     {
         public int Id { get; set; }
-        public string Title { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
+        public string Title { get; set; }
+        public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int? AssignedToEmployeeId { get; set; }
-        public TaskStatus Status { get; set; }
+        public string AssignedToEmployeeName { get; set; }
         public int ProjectId { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public Employee AssignedToEmployee { get; set; } = null!;
-        public Project Project { get; set; } = null!;
+        public string Status { get; set; }
     }
+
 }

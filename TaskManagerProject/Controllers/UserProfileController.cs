@@ -40,6 +40,8 @@ namespace TaskManagerProject.Controllers
 
             return View(model);
         }
+
+
         [HttpPost]
         public IActionResult Profile(UserProfileDto model, IFormFile profilePicture)
         {
@@ -50,6 +52,32 @@ namespace TaskManagerProject.Controllers
 
                 if (userId > 0)
                 {
+                    // Логика за качване на снимката
+                    if (profilePicture != null && profilePicture.Length > 0)
+                    {
+                        // Задаваш пътя за качване на файла
+                        var fileName = Path.GetFileName(profilePicture.FileName);
+                        var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "profile_pictures");
+
+                        if (!Directory.Exists(uploadsPath))
+                        {
+                            Directory.CreateDirectory(uploadsPath);
+                        }
+
+                        // Създаване на уникално име на файла (можеш да използваш GUID или уникален идентификатор)
+                        var uniqueFileName = Guid.NewGuid().ToString() + "_" + fileName;
+                        var filePath = Path.Combine(uploadsPath, uniqueFileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            profilePicture.CopyTo(stream);
+                        }
+
+                        // Запазване на URL-то на снимката в модела
+                        model.ProfilePictureUrl = $"/uploads/profile_pictures/{uniqueFileName}";
+                    }
+                    model.Id = userId;
+                    // Обновяване на профила в базата
                     userService.UpdateEmployeeProfile(model, profilePicture);
                     return RedirectToAction("Profile");
                 }
@@ -57,6 +85,7 @@ namespace TaskManagerProject.Controllers
 
             return View(model);
         }
+
 
 
         public IActionResult Index()

@@ -1,4 +1,4 @@
-﻿@model TaskManagerProject.DTOs.ProjectDetailsDto
+﻿@model TaskManagerProject.DTOs.ProjectDetails
 
 @{
     ViewBag.Title = Model.ProjectName;
@@ -12,7 +12,7 @@
     }
 
     #calendar {
-        width: 450px;
+        width: 500px;
         height: 450px;
         position: absolute;
         top: 130px;
@@ -50,14 +50,37 @@
     }
 
     .task-form {
-        width: 750px;
+        width: 700px;
     }
 
-    #startDate,
-    #endDate,
+    #taskName, #taskDescription, #assignee,
     .btn-primary {
-        margin-top: 20px;
+        margin-bottom: 10px;
     }
+
+    #uniqueCode {
+        width: 150px;
+        border-radius: 5px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+
+    button[type="submit"] {
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        margin-left: 10px;
+        margin-bottom:10px;
+    }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
 </style>
 
 <body class="container-fluid">
@@ -67,16 +90,33 @@
     </div>
 
     <h3 class="my-4">Team Members</h3>
+    @if (ViewBag.IsCreator != null && ViewBag.IsCreator)
+    {
+        <div class="ml-auto d-flex">
+            <input type="hidden" name="projectId" value="@Model.Id" />
+            <input type="text" name="uniqueCode" id="uniqueCode" />
+            <button type="submit">Add Member</button>
+        </div>
+    }
+
     <table class="table team-members-table mb-4">
         <tbody>
-            @foreach (var member in Model.TeamMembers)
+            @foreach (var member in Model.TeamMembers.OrderByDescending(m => m.Id == Model.CreatedByUserId))
             {
                 <tr>
-                    <td>@member.Name</td>
+                    <td>
+                        <img src="@member.ProfilePictureUrl" alt="@member.Name" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;" />
+                        @member.Name
+                        @if (member.Id == Model.CreatedByUserId)
+                        {
+                            <i class="fa fa-crown text-warning" title="Project Creator"></i>
+                        }
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
+
 
     <div class="calendar-container">
         <div id='calendar'></div>
@@ -183,7 +223,7 @@
             }
 
             $.ajax({
-                url: '@Url.Action("AddTask", "Project")',
+                url: '@Url.Action("AddTask", "Task")',
                 type: 'POST',
                 data: JSON.stringify({
                     Title: taskName,
@@ -234,7 +274,7 @@
     function confirmDeleteTask(taskId) {
         if (confirm("Are you sure you want to delete this task?")) {
             $.ajax({
-                url: '@Url.Action("DeleteTask", "Project")',
+                url: '@Url.Action("DeleteTask", "Task")',
                 type: 'POST',
                 data: { taskId: taskId },
                 success: function (response) {
@@ -283,5 +323,48 @@
             });
         });
     });
+    document.addEventListener('DOMContentLoaded', function () {
+        var addMemberButton = document.querySelector('button[type="submit"]');
+        addMemberButton.addEventListener('click', function (e) {
+            e.preventDefault();
+            addTeamMember();
+        });
+    });
+
+    function addTeamMember() {
+        var uniqueCode = document.getElementById("uniqueCode").value;
+        var projectId = document.querySelector('input[name="projectId"]').value;
+
+        if (!uniqueCode) {
+            alert("Please enter a unique code!");
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("AddTeamMember", "Project")',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ projectId: projectId, uniqueCode: uniqueCode }),
+            success: function (response) {
+                if (response.success) {
+                    var newMember = `<tr>
+                                        <td>
+                                            <img src="${response.profilePictureUrl}" alt="${response.name}" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;" />
+                                            ${response.name}
+                                        </td>
+                                    </tr>`;
+                    $(".team-members-table tbody").append(newMember);
+                    alert("Member added successfully.");
+                    $("#uniqueCode").val("");
+                } else {
+                    alert("Failed to add member: " + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Error: " + error);
+            }
+        });
+    }
+
 </script>
 </html>

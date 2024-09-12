@@ -21,6 +21,10 @@
       "PackagePath": "staticwebassets\\images\\profiles\\7582eb6904d015c40664888034e96231.jpg"
     },
     {
+      "Id": "C:\\Users\\radai\\Documents\\Projects\\TaskManager\\TaskManagerProject\\wwwroot\\images\\profiles\\DSCN1126.JPG",
+      "PackagePath": "staticwebassets\\images\\profiles\\DSCN1126.JPG"
+    },
+    {
       "Id": "C:\\Users\\radai\\Documents\\Projects\\TaskManager\\TaskManagerProject\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },
@@ -251,6 +255,30 @@
     {
       "Id": "C:\\Users\\radai\\Documents\\Projects\\TaskManager\\TaskManagerProject\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
+    },
+    {
+      "Id": "C:\\Users\\radai\\Documents\\Projects\\TaskManager\\TaskManagerProject\\wwwroot\\uploads\\profile_pictures\\2e749719-4439-4c8e-995f-a558eb91e9d3_DSCN1057.JPG",
+      "PackagePath": "staticwebassets\\uploads\\profile_pictures\\2e749719-4439-4c8e-995f-a558eb91e9d3_DSCN1057.JPG"
+    },
+    {
+      "Id": "C:\\Users\\radai\\Documents\\Projects\\TaskManager\\TaskManagerProject\\wwwroot\\uploads\\profile_pictures\\372022b9-6191-43b8-8660-dc495fe038d0_DSCN1057.JPG",
+      "PackagePath": "staticwebassets\\uploads\\profile_pictures\\372022b9-6191-43b8-8660-dc495fe038d0_DSCN1057.JPG"
+    },
+    {
+      "Id": "C:\\Users\\radai\\Documents\\Projects\\TaskManager\\TaskManagerProject\\wwwroot\\uploads\\profile_pictures\\68cc6870-8f1f-4782-92ce-5b14661b9492_DSCN1057.JPG",
+      "PackagePath": "staticwebassets\\uploads\\profile_pictures\\68cc6870-8f1f-4782-92ce-5b14661b9492_DSCN1057.JPG"
+    },
+    {
+      "Id": "C:\\Users\\radai\\Documents\\Projects\\TaskManager\\TaskManagerProject\\wwwroot\\uploads\\profile_pictures\\71404014-c7f0-405b-85b6-4133b69c5763_DSCN1126.JPG",
+      "PackagePath": "staticwebassets\\uploads\\profile_pictures\\71404014-c7f0-405b-85b6-4133b69c5763_DSCN1126.JPG"
+    },
+    {
+      "Id": "C:\\Users\\radai\\Documents\\Projects\\TaskManager\\TaskManagerProject\\wwwroot\\uploads\\profile_pictures\\e39bb6a7-02bf-44c3-a472-f13b31c67006_DSCN1057.JPG",
+      "PackagePath": "staticwebassets\\uploads\\profile_pictures\\e39bb6a7-02bf-44c3-a472-f13b31c67006_DSCN1057.JPG"
+    },
+    {
+      "Id": "C:\\Users\\radai\\Documents\\Projects\\TaskManager\\TaskManagerProject\\wwwroot\\uploads\\profile_pictures\\e5f11177-06ab-4b05-8e38-f123daf3817c_DSCN1057.JPG",
+      "PackagePath": "staticwebassets\\uploads\\profile_pictures\\e5f11177-06ab-4b05-8e38-f123daf3817c_DSCN1057.JPG"
     },
     {
       "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.TaskManagerProject.Microsoft.AspNetCore.StaticWebAssets.props",

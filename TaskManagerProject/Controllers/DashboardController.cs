@@ -38,7 +38,7 @@ namespace TaskManagerProject.Controllers
                                            Id = p.Id,
                                            Name = p.Name,
                                            Description = p.Description,
-                                           Members = p.Team.Members.Select(m => new MemberDto
+                                           Members = p.Team.Members.Select(m => new Member
                                            {
                                                Id = m.Id,
                                                Name = $"{m.FirstName} {m.LastName}"

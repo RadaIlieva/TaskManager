@@ -122,6 +122,7 @@ namespace TaskManagerProject.Services
 
                 context.SaveChanges();
             }
+            context.SaveChanges();
         }
 
     }

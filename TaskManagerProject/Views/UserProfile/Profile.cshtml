@@ -1,68 +1,78 @@
-﻿@model TaskManagerProject.Models.UserProfileDto
+﻿    @model TaskManagerProject.Models.UserProfile
 
-@{
-    ViewData["Title"] = "User Profile";
-}
+    @{
+        ViewData["Title"] = "User Profile";
+    }
 
-<div class="profile-page">
-    <h2>Edit Profile</h2>
+    <div class="profile-page">
+        <h2>Edit Profile</h2>
 
-    <div class="form-group profile-picture">
-        <label>Profile Picture</label>
-        <img src="@(Model?.ProfilePictureUrl ?? "/images/default.png")" id="profilePic" alt="Profile Picture" onclick="document.getElementById('ProfilePicture').click();" />
-        <input type="file" id="ProfilePicture" name="ProfilePicture" style="display:none;" onchange="previewImage(event)" />
+        
+
+        <form asp-action="Profile" method="post" enctype="multipart/form-data">
+
+            <div class="form-group profile-picture">
+                <label>Profile Picture</label>
+                <img src="@(Model?.ProfilePictureUrl ?? "/images/default.png")" id="profilePic" alt="Profile Picture" onclick="document.getElementById('ProfilePicture').click();" />
+
+                <input type="file" id="ProfilePicture" name="ProfilePicture" style="display:none;" onchange="previewImage(event)" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FirstName"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LastName"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DateOfBirth"></label>
+                <input asp-for="DateOfBirth" class="form-control" type="date" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PhoneNumber"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="UniqueCode"></label>
+                <input asp-for="UniqueCode" class="form-control" readonly />
+                <span asp-validation-for="UniqueCode" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
     </div>
-
-    <form asp-action="Profile" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <label asp-for="FirstName"></label>
-            <input asp-for="FirstName" class="form-control" />
-            <span asp-validation-for="FirstName" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="LastName"></label>
-            <input asp-for="LastName" class="form-control" />
-            <span asp-validation-for="LastName" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="DateOfBirth"></label>
-            <input asp-for="DateOfBirth" class="form-control" type="date" />
-            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="Email"></label>
-            <input asp-for="Email" class="form-control" />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="PhoneNumber"></label>
-            <input asp-for="PhoneNumber" class="form-control" />
-            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="UniqueCode"></label>
-            <input asp-for="UniqueCode" class="form-control" readonly />
-            <span asp-validation-for="UniqueCode" class="text-danger"></span>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Save</button>
-    </form>
-</div>
 
 <script>
     function previewImage(event) {
-        var reader = new FileReader();
-        reader.onload = function () {
-            var output = document.getElementById('profilePic');
-            output.src = reader.result;
-        };
-        reader.readAsDataURL(event.target.files[0]);
+        var file = event.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('profilePic');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert('Please select a valid image file.');
+        }
     }
+
 </script>
 
 <style>

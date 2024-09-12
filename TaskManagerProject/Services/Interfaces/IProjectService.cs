@@ -1,24 +1,15 @@
 ﻿using TaskManagerProject.DTOs;
 using TaskManagerProject.Models;
 
-namespace TaskManagerProject.Services
+namespace TaskManagerProject.Services.Interfaces
 {
     public interface IProjectService
     {
-        void CreateProject(NewProjectDto model, int createdByUserId);
-        ProjectDetailsDto GetProjectDetails(int projectId);
-        ServiceResult AddTaskToProject(ProjectTaskDto taskDto); 
-        ProjectTaskDto GetTaskById(int taskId); 
-        ServiceResult UpdateTaskStatus(int taskId, string status);
-        ServiceResult CreateTask(ProjectTaskDto model, int currentUserId);
-
-        ServiceResult UpdateTaskDescription(int taskId, string newDescription);
-        ServiceResult DeleteTask(int taskId);
-
+        void CreateProject(NewProjectDto projectDto, int createdByUserId);
         List<ProjectDto> GetProjectsForUser(string uniqueCode);
-        Project GetProjectById(int projectId);
-
-
+        ProjectDetailsDto GetProjectDetails(int projectId);
+        ServiceResult AddMemberToProject(int projectId, string uniqueCode);
+        ServiceResult RemoveMemberFromProject(int projectId, int memberId);
 
     }
 }

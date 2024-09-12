@@ -6,12 +6,12 @@ namespace TaskManagerProject.Services
     public interface IUserProfileService
     {
         Employee GetEmployeeByEmail(string email);
-        UserProfileDto GetUserProfileByEmail(string email);
+        UserProfile GetUserProfileByEmail(string email);
         int GetUserIdByEmail(string email);
         Employee GetEmployeeByUniqueCode(string uniqueCode);
-        UserProfileDto GetUserProfileByUniqueCode(string uniqueCode);
-        void UpdateEmployeeProfile(UserProfileDto model, IFormFile profilePicture);
-        void UpdateEmployeeProfileWithoutPicture(UserProfileDto model);
+        UserProfile GetUserProfileByUniqueCode(string uniqueCode);
+        void UpdateEmployeeProfile(UserProfile model, IFormFile profilePicture);
+        void UpdateEmployeeProfileWithoutPicture(UserProfile model);
 
     }
 }

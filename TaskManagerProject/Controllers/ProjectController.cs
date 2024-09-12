@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TaskManagerProject.DTOs;
-using TaskManagerProject.Enums;
 using TaskManagerProject.Models;
 using TaskManagerProject.Services;
 using TaskManagerProject.Services.Interfaces;
@@ -23,16 +21,8 @@ namespace TaskManagerProject.Controllers
 
         public IActionResult NewProject()
         {
-            var userEmail = User.Identity.Name;
-            var currentUser = userService.GetUserProfileByEmail(userEmail);
-
-            if (currentUser != null)
-            {
-                ViewBag.UserName = $"{currentUser.FirstName} {currentUser.LastName}";
-                ViewBag.UserUniqueCode = currentUser.UniqueCode;
-                ViewBag.ProfilePictureUrl = currentUser.ProfilePictureUrl; 
-            }
-
+            var currentUser = userService.GetUserProfileByEmail(User.Identity.Name);
+            ViewBag.UserInfo = currentUser;
             return View(new NewProjectDto());
         }
 
@@ -42,19 +32,15 @@ namespace TaskManagerProject.Controllers
             if (ModelState.IsValid)
             {
                 var createdByUser = userService.GetEmployeeByEmail(User.Identity.Name);
-                if (createdByUser == null)
-                {
-                    return Unauthorized();
-                }
+                if (createdByUser == null) return Unauthorized();
 
                 projectService.CreateProject(model, createdByUser.Id);
                 return RedirectToAction("Index", "UserProfile");
             }
-
             return View(model);
         }
 
-        public IActionResult Details(int id)
+       public IActionResult Details(int id)
         {
             var projectDetails = projectService.GetProjectDetails(id);
             if (projectDetails == null)
@@ -79,109 +65,44 @@ namespace TaskManagerProject.Controllers
             ViewBag.UserName = $"{currentUser.FirstName} {currentUser.LastName}";
             ViewBag.UserUniqueCode = currentUser.UniqueCode;
             ViewBag.ProfilePictureUrl = currentUser.ProfilePictureUrl;
+            
             ViewBag.IsCreator = isCreator; 
 
             return View(projectDetails);
         }
 
 
-
         [HttpPost]
-        public IActionResult AddTask([FromBody] ProjectTaskDto newTaskDto)
+        public IActionResult AddTeamMember([FromBody] AddMemberRequestDto request)
         {
-            if (newTaskDto == null)
+            if (request == null || request.ProjectId <= 0 || string.IsNullOrEmpty(request.UniqueCode))
             {
-                return Json(new { success = false, message = "Invalid task data." });
+                return Json(new { success = false, message = "Invalid request." });
             }
 
-            var result = projectService.AddTaskToProject(newTaskDto);
+            var result = projectService.AddMemberToProject(request.ProjectId, request.UniqueCode);
             if (result.Success)
             {
-                return Json(new { success = true });
-            }
-            else
-            {
-                return Json(new { success = false, message = result.ErrorMessage });
-            }
-        }
-
-        [HttpPost]
-        public IActionResult UpdateTaskStatus([FromBody] TaskStatusUpdateDto updateDto)
-        {
-            if (updateDto == null)
-            {
-                return Json(new { success = false, message = "Invalid task data." });
+                var newMember = userService.GetUserProfileByUniqueCode(request.UniqueCode);
+                return Json(new
+                {
+                    success = true,
+                    name = $"{newMember.FirstName} {newMember.LastName}",
+                    profilePictureUrl = newMember.ProfilePictureUrl
+                });
             }
 
-            var task = projectService.GetTaskById(updateDto.TaskId);
-            if (task == null || (!User.IsInRole("ProjectAdmin") && task.AssignedToEmployeeId != int.Parse(User.Identity.Name)))
-            {
-                return Json(new { success = false, message = "Unauthorized or task not found." });
-            }
-
-            var result = projectService.UpdateTaskStatus(updateDto.TaskId, updateDto.Status);
-            return Json(new { success = result.Success, message = result.ErrorMessage });
+            return Json(new { success = false, message = result.ErrorMessage });
         }
 
 
         [HttpPost]
-        [Authorize]
-        public IActionResult CreateTask(ProjectTaskDto model)
+        public IActionResult RemoveTeamMember(int projectId, int memberId)
         {
-            var currentUserId = int.Parse(User.Identity.Name);
-
-            var project = projectService.GetProjectById(model.ProjectId);
-            if (project == null || project.CreatedByUserId != currentUserId)
-            {
-                return Unauthorized();
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            var result = projectService.CreateTask(model, currentUserId);
-
-            if (result.Success)
-            {
-                return RedirectToAction("Details", new { id = model.ProjectId });
-            }
-            else
-            {
-                ModelState.AddModelError("", result.ErrorMessage);
-                return View(model);
-            }
+            var result = projectService.RemoveMemberFromProject(projectId, memberId);
+            return Json(result);
         }
 
-        [HttpPost]
-        public IActionResult DeleteTask(int taskId)
-        {
-            var result = projectService.DeleteTask(taskId);
-            if (result.Success)
-            {
-                return Json(new { success = true });
-            }
-            else
-            {
-                return Json(new { success = false, message = result.ErrorMessage });
-            }
-        }
-
-
-        [HttpPost]
-        public IActionResult UpdateTaskDescription(int taskId, string newDescription)
-        {
-            var result = projectService.UpdateTaskDescription(taskId, newDescription);
-            if (result.Success)
-            {
-                return Json(new { success = true });
-            }
-            else
-            {
-                return Json(new { success = false, message = result.ErrorMessage });
-            }
-        }
 
     }
 }

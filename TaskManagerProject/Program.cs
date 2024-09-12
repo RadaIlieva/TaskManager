@@ -22,6 +22,7 @@ public class Program
         builder.Services.AddScoped<IUserProfileService, UserProfileService>();
         builder.Services.AddScoped<IProjectService, ProjectService>();
         builder.Services.AddScoped<IAccountService, AccountService>();
+        builder.Services.AddScoped<ITaskService, TaskService>();
 
         builder.Services.AddHttpClient<IAccountService, AccountService>();
 
